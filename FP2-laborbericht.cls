@@ -162,8 +162,8 @@ separate-uncertainty, locale=DE, per-mode=symbol-or-fraction]{siunitx}
 
 
 \usepackage[a4paper,
-  lmargin=0.1111\paperwidth, rmargin=0.1111\paperwidth, % 1/9
-  tmargin=0.1111\paperheight, bmargin=0.1111\paperheight % 1/9
+  hmargin=0.1111\paperwidth, % 1/9
+  vmargin=0.1111\paperheight, % 1/9
 ]{geometry}
 
 
