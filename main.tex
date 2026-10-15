@@ -1,0 +1,37 @@
+% !TeX program = lualatex
+\documentclass[a4paper,oneside,10pt]{FP2-laborbericht}
+
+\renewcommand{\labcourse}{FP2}
+\renewcommand{\experimenttitle}{???}
+\renewcommand{\experimentsubtitle}{???}
+\renewcommand{\experimentcode}{???}
+\renewcommand{\groupnumber}{???}
+\renewcommand{\partnerone}{???}
+\renewcommand{\partnertwo}{???}
+\renewcommand{\experimentdate}{???}
+\renewcommand{\supervisor}{???}
+
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\setcounter{tocdepth}{2}
+{
+\hypersetup{linkcolor=black}
+\tableofcontents
+}
+\newpage
+
+\input{sections/01-einleitung}
+\input{sections/02-theoretische-grundlagen}
+\input{sections/03-versuchaufbau-durchführung}
+\input{sections/04-auswertung-ergebnisse}
+\input{sections/05-disskussion-fehlerbetrachtung}
+\input{sections/06-zusammenfassung}
+\clearpage
+\input{sections/07-anhang}
+\clearpage
+\printbibliography[heading=bibnumbered, title={Literatur}]
+
+\end{document}
