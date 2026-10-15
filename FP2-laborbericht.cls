@@ -11,6 +11,8 @@
 
 \LoadClass{article} % Load the base "article" class
 
+\usepackage{etoolbox}
+
 % Default variables for header information (can be overridden in the main document)
 \newcommand{\partnerone}{Partner 1}
 \newcommand{\partnertwo}{Partner 2}
@@ -18,12 +20,16 @@
 \newcommand{\experimentdate}{Experiment date}
 \newcommand{\supervisor}{Supervisor}
 \newcommand{\experimenttitle}{Experiment name}
-\newcommand{\experimentsubtitle}{Experiment subtitle}
+\newcommand{\experimentsubtitle}{}
 \newcommand{\experimentcode}{XXX}
 \newcommand{\labcourse}{Lab course}
 
+\newcommand{\maybesubtitle}{%
+  \ifdefempty{\experimentsubtitle}{}{\texorpdfstring{\\}{ }\experimentsubtitle}%
+}
+
 % Define the title and date for the report
-\title{\textbf{\experimentcode:\ \experimenttitle}\\ \experimentsubtitle \\ Laborbericht \labcourse} % Define the title
+\title{\textbf{\experimentcode:\ \experimenttitle}\maybesubtitle\texorpdfstring{\\}{ }Laborbericht \labcourse}
 
 % Command to output additional header information on the title page
 \newcommand{\headerInformation}{%
