@@ -10,3 +10,6 @@
 *.lof
 *.lot
 .DS_Store
+*.bcf
+*.run.xml
+reference-template/

@@ -1,27 +1,31 @@
 % !TeX program = lualatex
-\documentclass[a4paper,oneside,10pt]{FP2-laborbericht}
+\documentclass{FP2-laborbericht}
 
-\renewcommand{\labcourse}{???}
-\renewcommand{\experimenttitle}{???}
-\renewcommand{\experimentsubtitle}{???}
-\renewcommand{\experimentcode}{???}
-\renewcommand{\groupnumber}{???}
-\renewcommand{\partnerone}{???}
-\renewcommand{\partnertwo}{???}
-\renewcommand{\experimentdate}{???}
-\renewcommand{\supervisor}{???}
-
+% ---- Info line (top left of the title page) --------------------------------
+\course{Fortgeschrittenenpraktikum 2}
+\experiment{???}
 \date{\today}
+
+% ---- Title block -----------------------------------------------------------
+%\articletype{LABORBERICHT}            % label above the title (default)
+%\logo{assets/logos/CUP_Logo}          % logo top right (default)
+\title[Kurztitel]{Titel des Versuchs}  % [short title for the running head]
+\author[1]{Vorname Nachname}           % one to three authors
+\author[1]{Vorname Nachname}
+\affiliation[1]{Fakultät für Physik, Ludwig-Maximilians-Universität München}
+\keywords{Stichwort 1, Stichwort 2, Stichwort 3}
+
+\addbibresource{references.bib}
 
 \begin{document}
 
 \maketitle
-\setcounter{tocdepth}{2}
-{
-\hypersetup{linkcolor=black}
+
+\begin{abstract}
+Kurze Zusammenfassung des Versuchs: Ziel, Methode, wichtigste Ergebnisse.
+\end{abstract}
+
 \tableofcontents
-}
-\newpage
 
 \input{sections/01-einleitung}
 \input{sections/02-theoretische-grundlagen}
