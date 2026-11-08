@@ -1,11 +1,11 @@
-%% lab-report.cls
+%% lab-report.cls -- lab report class for LuaLaTeX/XeLaTeX with biber.
+%% Derived from the Cambridge University Press "Data/Math" journal template
+%% (CUP-JNL-DTM.cls, LPPL 1.3c, available from CUP's author templates):
+%% reduced to its layout and adapted for lab reports.
 %%
-%% Lab report class whose layout reproduces the Cambridge University Press
-%% "Data/Math" journal template (CUP-JNL-DTM.cls, LPPL 1.3c).
-%% Values taken from that class are marked with  % CUP: <line numbers>.
-%%
-%% Requires LuaLaTeX (or XeLaTeX) and biber.
-%%
+%% Copyright (C) 2026 citystomper
+%% This work may be distributed and/or modified under the conditions of the
+%% LaTeX Project Public License, version 1.3c or later (see LICENSE).
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{lab-report}[2026/11/08 v2.1 Lab report in CUP layout]
 
@@ -19,7 +19,6 @@
 % ============================================================================
 %  2. Fonts and sizes
 % ============================================================================
-% CUP: 129-180 -- font size table
 \renewcommand\normalsize{%
   \@setfontsize\normalsize{10pt}{12pt}%
   \abovedisplayskip 9.5\p@ \@plus2\p@ \@minus0\p@
@@ -59,7 +58,6 @@
 \DeclareMathSizes{\@xpt}{\@xpt}{7}{5}
 \DeclareMathSizes{\@xipt}{\@xipt}{7}{5}
 
-% The CUP PDF uses TeX Gyre Termes (via newtx); this is its OpenType version.
 \RequirePackage{fontspec}
 \RequirePackage{unicode-math}
 \setmainfont{texgyretermes}[
@@ -71,7 +69,6 @@
 \setmathfont{texgyretermes-math.otf}
 \setmonofont{JetBrains Mono}[Scale=MatchLowercase]
 
-% Named fonts of the front matter and page heads  % CUP: 374-382, 1141-1142
 \newcommand\Artcatfont{\normalfont\fontsize{8.5}{10.5}\bfseries\selectfont}
 \newcommand\Titlefont{\normalfont\fontsize{16}{18}\bfseries\selectfont}
 \newcommand\Authorfont{\fontsize{10}{12}\selectfont}
@@ -81,33 +78,30 @@
 \newcommand\abstractfont{\fontsize{9}{11}\selectfont}
 \newcommand\opheaderfont{\fontsize{7}{9}\selectfont}
 \newcommand\headerfont{\fontsize{10}{12}\selectfont}
-% Small print shared by the bibliography and code listings  % CUP: 1134
 \newcommand\smallprintfont{\fontsize{8}{10}\selectfont}
 
 % ============================================================================
 %  3. Page layout
 % ============================================================================
-% A4 with 1/9 margins; head distance taken from CUP (headsep 19.5pt).
-% The page number sits in the middle of the bottom margin (1/18).
 \RequirePackage[
   a4paper,
   hmargin    = 0.1111\paperwidth,  % 1/9
   vmargin    = 0.1111\paperheight, % 1/9
   headheight = 12pt,
-  headsep    = 19.5pt,             % CUP: 199
-  footskip   = 0.0556\paperheight, % 1/18
+  headsep    = 19.5pt,
+  footskip   = 0.0556\paperheight, % 1/18: middle of the bottom margin
   heightrounded,
 ]{geometry}
 
 % ============================================================================
 %  4. Typesetting parameters
 % ============================================================================
-\setlength\parindent{12pt}                         % CUP: 217
-\setlength\parskip{0pt}                            % CUP: 225
-\setlength\lineskip{1\p@}                          % CUP: 222-223
+\setlength\parindent{12pt}
+\setlength\parskip{0pt}
+\setlength\lineskip{1\p@}
 \setlength\normallineskip{1\p@}
 
-\@lowpenalty   51                                  % CUP: 228-299
+\@lowpenalty   51
 \@medpenalty  151
 \@highpenalty 301
 \clubpenalty 10000
@@ -131,7 +125,7 @@
 \setlength\textfloatsep{19\p@ \@plus 2\p@ \@minus 4\p@}
 \setlength\intextsep   {18\p@ \@plus 2\p@ \@minus 2\p@}
 
-\sloppy                                            % CUP: 1868-1873
+\sloppy
 \vbadness=9999
 \tolerance=9999
 \frenchspacing
@@ -150,9 +144,8 @@
   \renewcommand\abstractname{Abstract}%
 }
 \newcommand\authorandname{und}
-% CUP: 257-258 -- no word fragments shorter than three letters
 \renewcommand*\ngermanhyphenmins{33}
-% Dates as DD.MM.YYYY (\today, and the default \date)
+% babel redefines \today on every language switch.
 \addto\datengerman{%
   \renewcommand\today{\two@digits{\day}.\two@digits{\month}.\the\year}}
 
@@ -163,15 +156,12 @@
 \RequirePackage{soul}
 
 % ---- Interface -------------------------------------------------------------
-% Everything shown comes from the document; apart from \title there are no
-% defaults, and items that are not set are simply left out.
+% No content defaults except \title; unset items are omitted.
 
-% Article type label, letterspaced, printed as typed  % CUP: 348-350
 \sodef\letterspacetwty{}{.1em}{.4em plus1em}{.5em plus 1em minus1em}
 \newcommand\articletype[1]{\gdef\lr@arttype{#1}}
 \articletype{}
 
-% Items of the small info block at the top left of the title page
 \newcommand*\course[1]{\gdef\lr@course{#1}}
 \newcommand*\experiment[1]{\gdef\lr@experiment{#1}}
 \newcommand*\group[1]{\gdef\lr@group{#1}}
@@ -179,11 +169,11 @@
 \experiment{}
 \group{}
 
-% \logo[includegraphics options]{file}: top right, flush with the margin.
-% By default as tall as the CUP logo (18.82pt) and at most 40% of the text
-% width; options such as height=1cm override this.
+% \logo[includegraphics options]{file}
+% Default height 18.82pt: rendered height of the original CUP logo.
 \newcommand\logo[2][]{\gdef\lr@logo{#2}\gdef\lr@logoopts{#1}}
 \logo{}
+% \edef: keyval only sees the user's options once they are expanded.
 \newcommand\lr@includelogo{%
   \begingroup
     \edef\x{\endgroup\noexpand\includegraphics[height=18.82pt,
@@ -191,13 +181,12 @@
       \unexpanded\expandafter{\lr@logoopts}]{\unexpanded\expandafter{\lr@logo}}}%
   \x}
 
-% \title[short title for the running head]{full title}  % CUP: 387-389
+% \title[short title for the running head]{full title}
 \renewcommand\title[2][]{%
   \gdef\@title{#2}%
   \if\relax\detokenize{#1}\relax\gdef\@shorttitle{#2}\else\gdef\@shorttitle{#1}\fi}
 \title{Titel}
 
-% \author[affiliation mark]{name}, one to three times
 \newcounter{lr@authors}
 \gdef\@author{}
 \renewcommand\author[2][]{%
@@ -210,19 +199,16 @@
     {#2\lr@affmark{#1}}%
   \ifx\@author\@empty\gdef\@author{#2}\else\g@addto@macro\@author{, #2}\fi}
 
-% \affiliation[mark]{text}  % CUP: 466-471 (\address)
 \newcounter{lr@affiliations}
 \gdef\lr@affiliations{}
 \newcommand\affiliation[2][]{%
   \stepcounter{lr@affiliations}%
   \g@addto@macro\lr@affiliations{{\lr@affmark{#1}#2.}\par}}
 
-% Marks are only printed when there is more than one affiliation.
 \newcommand\lr@affmark[1]{%
   \ifnum\value{lr@affiliations}>1
     \if\relax\detokenize{#1}\relax\else\textsuperscript{#1}\fi
   \fi}
-
 
 % ---- Printing --------------------------------------------------------------
 \newcommand\lr@author[1]{\csname lr@author@#1\endcsname}
@@ -233,16 +219,13 @@
   \else \lr@author{1}, \lr@author{2} \authorandname~\lr@author{3}%
   \fi}
 
-% Title-page head: a two-column table, like CUP's journal line + DOI line.
+% Title-page head (two-column table):
 %   \textit{course}, Versuch X, Gruppe Y          [logo]
 %   date
-% Empty items are left out (with their commas); if the first line is empty,
-% the date moves up into it. The logo sits in the right cell of the first
-% row: its top edge is set to the cap height of that row, so logo and text
-% tops line up exactly, it is flush with the right margin, and it hangs
-% down without affecting the rows.
+% Without a first line the date moves up.
 \newif\iflr@lineone
 \newcommand\lr@item[1]{\lr@sep#1\def\lr@sep{, }\lr@lineonetrue}
+% Top edge at the row's cap height; \smash keeps the row height unchanged.
 \newcommand\lr@logocell{%
   \ifx\lr@logo\@empty\else
     \smash{\raisebox{\dimexpr\fontcharht\font`H-\height\relax}{\lr@includelogo}}%
@@ -252,21 +235,20 @@
   \ifx\lr@course\@empty\else\lr@item{\textit{\lr@course}}\fi
   \ifx\lr@experiment\@empty\else\lr@item{Versuch~\lr@experiment}\fi
   \ifx\lr@group\@empty\else\lr@item{Gruppe~\lr@group}\fi
-  % (conditionals are closed before & and \\ so the table rows end cleanly)
+  % & and \\ must not occur inside an open conditional; branches are
+  % resolved via \@firstoftwo/\@secondoftwo before the alignment sees them.
   \iflr@lineone\expandafter\@firstoftwo\else\expandafter\@secondoftwo\fi
     {&\lr@logocell
      \ifx\@date\@empty\expandafter\@gobble\else\expandafter\@firstofone\fi
        {\\\@date&}}%
     {\@date&\lr@logocell}}
 
-% Title block  % CUP: 523-548 (history and abstract moved out)
-% Missing parts are skipped together with the space above them.
 \renewcommand\@maketitle{%
   \noindent\vbox{%
     \hsize\textwidth\parindent\z@
     \vskip7pt
     \ifx\lr@arttype\@empty\else
-      % (soul needs the text itself, not the macro holding it)
+      % soul needs the literal text, not a macro.
       \hbox to\textwidth{\Artcatfont
         \expandafter\letterspacetwty\expandafter{\lr@arttype}\hfill}%
       \vskip15.5pt
@@ -281,11 +263,9 @@
       {\addressfont\lr@affiliations\par}%
     \fi
   }\par
-  % CUP has 22pt before the abstract head (and 23pt after the whole block,
-  % added by the abstract environment); without an abstract this 22pt remains.
+  % Equal to the abstract head's beforeskip; \addvspace keeps the larger.
   \addvspace{22pt}}
 
-% CUP: 551-587
 \renewcommand\maketitle{\par
   \@afterindentfalse
   \begingroup
@@ -299,7 +279,6 @@
   \global\let\@maketitle\relax
   \@afterheading}
 
-% Abstract: used directly after \maketitle  % CUP: 494-502
 \newcommand\abstracthead{\@startsection{section}{1}{\z@}%
   {-22pt \@plus2ex \@minus0ex}{0.0001pt}{\abstractheadfont}}
 \newcommand\subabstracthead{\@startsection{subsection}{2}{\z@}%
@@ -315,9 +294,6 @@
 % ============================================================================
 %  7. Page styles
 % ============================================================================
-% Title page: info block top left, logo top right  % CUP: 1170-1181
-% (CUP places the logo separately, 5pt above the head baseline, which left it
-% about 1pt below the text; here it shares the info block's first row.)
 \def\ps@titlepage{%
   \def\@oddhead{\hbox to\textwidth{%
     \vbox to\z@{\vskip-7pt\rlap{\parbox{\textwidth}{\opheaderfont
@@ -329,23 +305,18 @@
   \let\@evenhead\@oddhead
   \let\@evenfoot\@oddfoot}
 
-% Regular pages: section left, short title right, page number centred
-% (fonts as in CUP's \ps@headings, 1147-1153)
 \def\ps@report{%
   \def\@oddhead{\headerfont\textit{\leftmark}\hfill\textit{\@shorttitle}}%
   \def\@oddfoot{\headerfont\hfil\thepage\hfil}%
   \let\@evenhead\@oddhead
   \let\@evenfoot\@oddfoot
-  \let\@mkboth\@gobbletwo
+  \let\@mkboth\@gobbletwo % ToC/bibliography must not set running-head marks
   \def\sectionmark##1{\markboth{##1}{##1}}%
   \let\subsectionmark\@gobble}
 
 % ============================================================================
 %  8. Sections
 % ============================================================================
-\setcounter{secnumdepth}{3}                         % CUP: 1186-1188
-
-% CUP: 1265-1292
 \newcommand\sectionfont{\normalfont\fontsize{10}{12}\bfseries\selectfont\raggedright}
 \newcommand\subsectionfont{\normalfont\fontsize{10}{12}\bfseries\itshape\selectfont\raggedright}
 \newcommand\subsubsectionfont{\normalfont\fontsize{9.5}{11.5}\bfseries\selectfont\raggedright}
@@ -365,7 +336,7 @@
 \renewcommand\subparagraph{\@startsection{subparagraph}{5}{\z@}%
   {-6pt \@plus1ex \@minus .2ex}{-1em}{\subparagraphfont}}
 
-% Kernel definition plus CUP's small skip for consecutive headings  % CUP: 1294-1309
+% Kernel \@startsection plus fixed skips between consecutive headings.
 \def\@startsection#1#2#3#4#5#6{%
   \if@noskipsec \leavevmode \fi
   \par
@@ -386,7 +357,6 @@
 % ============================================================================
 %  9. Table of contents
 % ============================================================================
-% CUP: 1662-1706
 \renewcommand\@pnumwidth{1.55em}
 \renewcommand\@tocrmarg{2.55em}
 \renewcommand\@dotsep{4.5}
@@ -416,8 +386,6 @@
 % ============================================================================
 % 10. Lists
 % ============================================================================
-% CUP list geometry (1314-1466): labels hang in the margin-aligned label
-% box, .5em label separation, 6pt around lists, no extra item spacing.
 \RequirePackage{enumitem}
 \setlist{topsep=6pt, partopsep=0pt, itemsep=0pt, parsep=0pt,
   labelsep=.5em, listparindent=\parindent, before=\raggedright}
@@ -435,8 +403,6 @@
 \RequirePackage{caption}
 \RequirePackage{subcaption}
 
-% "Abbildung 1." bold italic, .5em, italic text with a final period,
-% centred when it fits on one line  % CUP: 1493-1582
 \DeclareCaptionLabelSeparator{cup}{.\hskip.5em}
 \captionsetup{
   font            = normalsize,
@@ -451,12 +417,11 @@
 \captionsetup[table]{position=above, skip=3pt}
 \captionsetup[sub]{labelsep=space, textformat=simple}
 
-\setlength\arraycolsep{2\p@}                        % CUP: 1496-1500
+\setlength\arraycolsep{2\p@}
 \setlength\tabcolsep{6\p@}
 \setlength\arrayrulewidth{.4\p@}
 \setlength\doublerulesep{2\p@}
 
-% Hairline booktabs rules with CUP's spacing  % CUP: 1553, 1616-1632
 \RequirePackage{booktabs}
 \setlength\heavyrulewidth{.15pt}
 \setlength\lightrulewidth{.15pt}
@@ -473,10 +438,8 @@
 % ============================================================================
 % 12. Footnotes
 % ============================================================================
-% CUP: 214-215, 1835-1844. CUP's rule (kern 2pt, rule, kern 4.5pt) adds 6.65pt
-% that LaTeX's page builder does not know about, so pages with footnotes can
-% overflow. Here the rule has zero net height and the 6.65pt moved into
-% \skip\footins: same picture (10pt text-to-rule, 4.5pt rule-to-note).
+% Zero-net-height rule; its 6.65pt live in \skip\footins so the page
+% builder accounts for them.
 \setlength\footnotesep{5.75\p@}
 \setlength{\skip\footins}{14.65\p@ \@plus 4\p@ \@minus 0\p@}
 \renewcommand\footnoterule{%
@@ -498,9 +461,6 @@
 % ============================================================================
 % 14. Code
 % ============================================================================
-% No syntax highlighting and no background (saves ink when printed):
-% code in the reference font size between two hairlines, as in booktabs
-% tables, with grey line numbers in the left margin.
 \RequirePackage{xcolor}
 \RequirePackage{listings}
 \RequirePackage{needspace}
@@ -522,10 +482,6 @@
 }
 
 % \codefile[shown name]{path}{note}
-% Header line with the file name (taken from the path unless given) on the
-% left and a short note on the right, then the code.
-%   \codefile{code/fitting.py}{Python-Modul}
-%   \codefile[zeeman.ipynb]{code/zeeman.py}{Jupyter-Notebook, exportiert}
 \newcommand\lr@basename[1]{%
   \filename@parse{#1}\filename@base
   \ifx\filename@ext\relax\else.\filename@ext\fi}
@@ -544,14 +500,14 @@
 % ============================================================================
 \RequirePackage[backend=biber, style=numeric]{biblatex}
 \renewcommand*\bibfont{\smallprintfont}
-\RequirePackage{xurl} % lets long URLs break anywhere
+\RequirePackage{xurl}
 
 % ============================================================================
 % 16. Links and cross-references
 % ============================================================================
 \definecolor{linkblue}{RGB}{0,99,166}
 \RequirePackage[colorlinks, allcolors=linkblue]{hyperref}
-% (not pdfusetitle: it would take the optional arguments of \title/\author)
+% Not pdfusetitle: it takes the optional arguments of \title/\author.
 \AtBeginDocument{%
   \hypersetup{
     pdftitle    = {\@title},
@@ -561,16 +517,14 @@
       \ifx\lr@experiment\@empty\else Versuch \lr@experiment\fi},
   }}
 \RequirePackage[ngerman, nameinlink, noabbrev, capitalise]{cleveref}
-% \cref{eq} -> "(2.1)", \Cref{eq} -> "Gleichung (2.1)" (both must be set,
-% otherwise cleveref derives \Cref from \cref and breaks)
+% \Crefformat must be set too; the derived one breaks on #2(#1)#3.
 \crefformat{equation}{#2(#1)#3}
 \Crefformat{equation}{Gleichung~#2(#1)#3}
-% cleveref files listings under the type "listing"
+% cleveref's type is "listing", not "lstlisting".
 \crefname{listing}{Quellcode}{Quellcodes}
 \Crefname{listing}{Quellcode}{Quellcodes}
 
 % ============================================================================
 \pagestyle{report}
-\pagenumbering{arabic}
 
 \endinput
