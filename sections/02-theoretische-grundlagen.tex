@@ -1,43 +1,52 @@
 \section{Theoretische Grundlagen}
 % Beispielinhalt: alles unterhalb der \section-Zeile kann gelöscht werden.
 
-\blindtext{} Eine ausführliche Darstellung findet sich in
+\blindtext{} Ein Literaturverweis steht hier nur zur Zierde
 \cite{zinth_optik_2018}.
 
-\subsection{Zeeman-Effekt}
+\subsection{Ein Unterabschnitt}
 
-Ein Atom mit dem Gesamtdrehimpuls $J$ besitzt im Magnetfeld $B$ die
-Zusatzenergie
+Ein Blindsatz behauptet, dass sich alles nach der Gleichung
 \begin{equation}
-  E_{m_J} = \mu_\mathrm{B}\, g_J\, m_J\, B ,
-  \label{eq:energie}
+  i\hbar\,\frac{\partial}{\partial t}\Psi(\mathbf{r},t)
+  = \Bigl[-\frac{\hbar^{2}}{2m}\nabla^{2} + V(\mathbf{r},t)\Bigr]
+    \Psi(\mathbf{r},t)
+  \label{eq:schroedinger}
 \end{equation}
-wobei $m_J \in \{-J, \dots, J\}$ die magnetische Quantenzahl ist.
+richtet, was aber niemand überprüft hat.
 
-% Gleichung mit Namen: der Name steht links, die Nummer rechts.
+% Gleichungen benennt man im Satz; die Nummer bleibt das einzige Label.
+Ein weiterer Blindsatz nennt die Lindblad-Gleichung, die für diesen Text
+keinerlei Bedeutung hat:
 \begin{equation}
-  \text{Zeeman-Aufspaltung:}\qquad
-  \Delta E = \mu_\mathrm{B}\, g_J\, \Delta m_J\, B
-  \label{eq:zeeman}
+  \frac{\mathrm{d}\hat\rho}{\mathrm{d}t}
+  = -\frac{i}{\hbar}\bigl[\hat H, \hat\rho\bigr]
+    + \sum_{k} \gamma_{k} \Bigl( \hat L_{k} \hat\rho \hat L_{k}^{\dagger}
+    - \frac{1}{2} \bigl\{ \hat L_{k}^{\dagger} \hat L_{k}, \hat\rho \bigr\}
+    \Bigr) .
+  \label{eq:lindblad}
 \end{equation}
+Im weiteren Text heißt sie einfach Lindblad-Gleichung \cref{eq:lindblad};
+\Cref{eq:schroedinger} am Satzanfang setzt das Wort \enquote{Gleichung}
+automatisch davor.
 
-Für den normalen Zeeman-Effekt ist $g_J = 1$, sodass
-\cref{eq:zeeman} mit $\Delta m_J = \pm 1$ direkt die Linienaufspaltung
-liefert. Mit \Cref{eq:energie} am Satzanfang wird das Wort
-\enquote{Gleichung} mitgesetzt.
-
-\subsection{Landé-Faktor}
+\subsection{Noch ein Unterabschnitt}
 
 \blindtext
 
-Mehrzeilige Rechnungen werden mit \texttt{align} gesetzt; jede Zeile
-erhält eine eigene Nummer, \verb|\notag| unterdrückt sie:
+Mehrzeilige Ausdrücke wie die Dyson-Reihe werden mit \texttt{align}
+gesetzt; jede Zeile erhält eine Nummer, \verb|\notag| unterdrückt sie:
 \begin{align}
-  g_J &= 1 + \frac{J(J+1) + S(S+1) - L(L+1)}{2J(J+1)}
-        \label{eq:lande} \\
-      &= 1 + \frac{3}{4}\cdot\frac{1}{2} \notag \\
-      &= \frac{11}{8} .
-        \label{eq:lande-wert}
+  \hat U(t, t_{0})
+  &= \mathcal{T} \exp\Bigl( -\frac{i}{\hbar} \int_{t_{0}}^{t}
+       \hat H(t')\, \mathrm{d}t' \Bigr)
+     \label{eq:dyson} \\
+  &= \mathbb{1} - \frac{i}{\hbar} \int_{t_{0}}^{t} \mathrm{d}t_{1}\,
+       \hat H(t_{1}) \notag \\
+  &\quad + \Bigl(-\frac{i}{\hbar}\Bigr)^{2} \int_{t_{0}}^{t} \mathrm{d}t_{1}
+       \int_{t_{0}}^{t_{1}} \mathrm{d}t_{2}\, \hat H(t_{1}) \hat H(t_{2})
+       + \dots
+     \label{eq:dyson-reihe}
 \end{align}
-\Cref{eq:lande} gilt in LS-Kopplung, \cref{eq:lande-wert} ist ein
-Beispielwert.
+Ob \cref{eq:dyson} und \cref{eq:dyson-reihe} hier etwas zu suchen haben,
+bleibt offen.
