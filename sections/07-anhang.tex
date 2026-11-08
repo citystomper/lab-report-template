@@ -21,6 +21,6 @@ Notebooks (\cref{sec:notebook}) verwendet.
 \subsection{Versuchsprotokoll}\label{sec:protokoll}
 Das handschriftliche Versuchsprotokoll ist auf den folgenden Seiten
 eingescannt.
-% Scan (A4) in voller Textbreite, eine Seite pro Seite; für weitere Seiten
-% die beiden Zeilen mit page=2, page=3, ... wiederholen.
-\newpage\noindent\includegraphics[page=1, width=\textwidth]{assets/placeholder-protocol}\par
+% Alle Seiten des Scans (A4), je eine pro Seite in voller Textbreite;
+% pagecommand={} behält Kopf- und Fußzeile.
+\includepdf[pages=-, width=\textwidth, pagecommand={}]{assets/placeholder-protocol}
