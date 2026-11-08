@@ -1,4 +1,4 @@
-%% FP2-laborbericht.cls
+%% lab-report.cls
 %%
 %% Lab report class whose layout reproduces the Cambridge University Press
 %% "Data/Math" journal template (CUP-JNL-DTM.cls, LPPL 1.3c).
@@ -7,7 +7,7 @@
 %% Requires LuaLaTeX (or XeLaTeX) and biber.
 %%
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{FP2-laborbericht}[2026/11/07 v2.0 FP2 lab report in CUP layout]
+\ProvidesClass{lab-report}[2026/11/08 v2.1 Lab report in CUP layout]
 
 % ============================================================================
 %  1. Base class and options
@@ -163,20 +163,33 @@
 \RequirePackage{soul}
 
 % ---- Interface -------------------------------------------------------------
-% Article type label (letterspaced)  % CUP: 348-350
-\sodef\letterspacetwty{}{.1em}{.4em plus1em}{.5em plus 1em minus1em}
-\newcommand\articletype[1]{\gdef\ArtType{\letterspacetwty{#1}}}
-\articletype{LABORBERICHT}
+% Everything shown comes from the document; apart from \title there are no
+% defaults, and items that are not set are simply left out.
 
-% Items of the small info line at the top left of the title page
-\newcommand*\course[1]{\gdef\fp@course{#1}}
-\newcommand*\experiment[1]{\gdef\fp@experiment{#1}}
-\newcommand*\group[1]{\gdef\fp@group{#1}}
-\newcommand*\logo[1]{\gdef\fp@logo{#1}}
-\course{Fortgeschrittenenpraktikum}
+% Article type label, letterspaced, printed as typed  % CUP: 348-350
+\sodef\letterspacetwty{}{.1em}{.4em plus1em}{.5em plus 1em minus1em}
+\newcommand\articletype[1]{\gdef\lr@arttype{#1}}
+\articletype{}
+
+% Items of the small info block at the top left of the title page
+\newcommand*\course[1]{\gdef\lr@course{#1}}
+\newcommand*\experiment[1]{\gdef\lr@experiment{#1}}
+\newcommand*\group[1]{\gdef\lr@group{#1}}
+\course{}
 \experiment{}
 \group{}
-\logo{assets/logos/CUP_Logo}
+
+% \logo[includegraphics options]{file}: top right, flush with the margin.
+% By default as tall as the CUP logo (18.82pt) and at most 40% of the text
+% width; options such as height=1cm override this.
+\newcommand\logo[2][]{\gdef\lr@logo{#2}\gdef\lr@logoopts{#1}}
+\logo{}
+\newcommand\lr@includelogo{%
+  \begingroup
+    \edef\x{\endgroup\noexpand\includegraphics[height=18.82pt,
+      width=0.4\noexpand\textwidth, keepaspectratio,
+      \unexpanded\expandafter{\lr@logoopts}]{\unexpanded\expandafter{\lr@logo}}}%
+  \x}
 
 % \title[short title for the running head]{full title}  % CUP: 387-389
 \renewcommand\title[2][]{%
@@ -185,67 +198,87 @@
 \title{Titel}
 
 % \author[affiliation mark]{name}, one to three times
-\newcounter{fp@authors}
+\newcounter{lr@authors}
 \gdef\@author{}
 \renewcommand\author[2][]{%
-  \stepcounter{fp@authors}%
-  \ifnum\value{fp@authors}>3
-    \ClassError{FP2-laborbericht}{Too many authors}%
+  \stepcounter{lr@authors}%
+  \ifnum\value{lr@authors}>3
+    \ClassError{lab-report}{Too many authors}%
       {This template supports at most three authors.}%
   \fi
-  \expandafter\gdef\csname fp@author@\the\value{fp@authors}\endcsname
-    {#2\fp@affmark{#1}}%
+  \expandafter\gdef\csname lr@author@\the\value{lr@authors}\endcsname
+    {#2\lr@affmark{#1}}%
   \ifx\@author\@empty\gdef\@author{#2}\else\g@addto@macro\@author{, #2}\fi}
 
 % \affiliation[mark]{text}  % CUP: 466-471 (\address)
-\newcounter{fp@affiliations}
-\gdef\fp@affiliations{}
+\newcounter{lr@affiliations}
+\gdef\lr@affiliations{}
 \newcommand\affiliation[2][]{%
-  \stepcounter{fp@affiliations}%
-  \g@addto@macro\fp@affiliations{{\fp@affmark{#1}#2.}\par}}
+  \stepcounter{lr@affiliations}%
+  \g@addto@macro\lr@affiliations{{\lr@affmark{#1}#2.}\par}}
 
 % Marks are only printed when there is more than one affiliation.
-\newcommand\fp@affmark[1]{%
-  \ifnum\value{fp@affiliations}>1
+\newcommand\lr@affmark[1]{%
+  \ifnum\value{lr@affiliations}>1
     \if\relax\detokenize{#1}\relax\else\textsuperscript{#1}\fi
   \fi}
 
 
 % ---- Printing --------------------------------------------------------------
-\newcommand\fp@author[1]{\csname fp@author@#1\endcsname}
-\newcommand\fp@printauthors{%
-  \ifcase\value{fp@authors}%
-  \or \fp@author{1}%
-  \or \fp@author{1} \authorandname~\fp@author{2}%
-  \else \fp@author{1}, \fp@author{2} \authorandname~\fp@author{3}%
+\newcommand\lr@author[1]{\csname lr@author@#1\endcsname}
+\newcommand\lr@printauthors{%
+  \ifcase\value{lr@authors}%
+  \or \lr@author{1}%
+  \or \lr@author{1} \authorandname~\lr@author{2}%
+  \else \lr@author{1}, \lr@author{2} \authorandname~\lr@author{3}%
   \fi}
 
-% Top-left info block, two lines like CUP's journal line + DOI line:
-%   \textit{course}, Versuch X, Gruppe Y
+% Title-page head: a two-column table, like CUP's journal line + DOI line.
+%   \textit{course}, Versuch X, Gruppe Y          [logo]
 %   date
-% (empty items are left out)
-\newcommand\fp@infoline{%
-  \textit{\fp@course}%
-  \ifx\fp@experiment\@empty\else, Versuch~\fp@experiment\fi
-  \ifx\fp@group\@empty\else, Gruppe~\fp@group\fi
-  % (conditional closed before the \\ so the table row ends cleanly)
-  \ifx\@date\@empty\expandafter\@gobble\else\expandafter\@firstofone\fi
-    {\\\@date}}
+% Empty items are left out (with their commas); if the first line is empty,
+% the date moves up into it. The logo sits in the right cell of the first
+% row: its top edge is set to the cap height of that row, so logo and text
+% tops line up exactly, it is flush with the right margin, and it hangs
+% down without affecting the rows.
+\newif\iflr@lineone
+\newcommand\lr@item[1]{\lr@sep#1\def\lr@sep{, }\lr@lineonetrue}
+\newcommand\lr@logocell{%
+  \ifx\lr@logo\@empty\else
+    \smash{\raisebox{\dimexpr\fontcharht\font`H-\height\relax}{\lr@includelogo}}%
+  \fi}
+\newcommand\lr@infoline{%
+  \let\lr@sep\@empty\lr@lineonefalse
+  \ifx\lr@course\@empty\else\lr@item{\textit{\lr@course}}\fi
+  \ifx\lr@experiment\@empty\else\lr@item{Versuch~\lr@experiment}\fi
+  \ifx\lr@group\@empty\else\lr@item{Gruppe~\lr@group}\fi
+  % (conditionals are closed before & and \\ so the table rows end cleanly)
+  \iflr@lineone\expandafter\@firstoftwo\else\expandafter\@secondoftwo\fi
+    {&\lr@logocell
+     \ifx\@date\@empty\expandafter\@gobble\else\expandafter\@firstofone\fi
+       {\\\@date&}}%
+    {\@date&\lr@logocell}}
 
 % Title block  % CUP: 523-548 (history and abstract moved out)
+% Missing parts are skipped together with the space above them.
 \renewcommand\@maketitle{%
   \noindent\vbox{%
     \hsize\textwidth\parindent\z@
     \vskip7pt
-    \hbox to\textwidth{\Artcatfont\ArtType\hfill}%
-    \ifx\@title\@empty\else
+    \ifx\lr@arttype\@empty\else
+      % (soul needs the text itself, not the macro holding it)
+      \hbox to\textwidth{\Artcatfont
+        \expandafter\letterspacetwty\expandafter{\lr@arttype}\hfill}%
       \vskip15.5pt
-      {\Titlefont\@title\par}%
     \fi
-    \ifnum\value{fp@authors}>\z@
+    {\Titlefont\@title\par}%
+    \ifnum\value{lr@authors}>\z@
       \vskip10pt
-      {\Authorfont\fp@printauthors\par}%
-      {\vskip7pt\addressfont\fp@affiliations\par}%
+      {\Authorfont\lr@printauthors\par}%
+    \fi
+    \ifnum\value{lr@affiliations}>\z@
+      \vskip\ifnum\value{lr@authors}>\z@ 7pt\else 10pt\fi
+      {\addressfont\lr@affiliations\par}%
     \fi
   }\par
   % CUP has 22pt before the abstract head (and 23pt after the whole block,
@@ -282,17 +315,14 @@
 % ============================================================================
 %  7. Page styles
 % ============================================================================
-% Title page: logo top right, info line top left  % CUP: 1170-1181
+% Title page: info block top left, logo top right  % CUP: 1170-1181
+% (CUP places the logo separately, 5pt above the head baseline, which left it
+% about 1pt below the text; here it shares the info block's first row.)
 \def\ps@titlepage{%
   \def\@oddhead{\hbox to\textwidth{%
-    \vbox to\z@{\vskip-5pt\rlap{\hbox to\textwidth{\hfill
-      \ifx\fp@logo\@empty\else\includegraphics[scale=.75]{\fp@logo}\fi
-      \hspace*{-1pt}}}\vss}%
     \vbox to\z@{\vskip-7pt\rlap{\parbox{\textwidth}{\opheaderfont
-      % (CUP's one-column spec leaves \fill nothing to stretch; the empty
-      % second column avoids an underfull box without moving anything)
       \begin{tabular*}{\textwidth}[b]{@{}l@{\extracolsep{\fill}}r@{}}%
-        \fp@infoline &
+        \lr@infoline
       \end{tabular*}}}\vss}%
     \hss}}%
   \def\@oddfoot{\headerfont\hfil\thepage\hfil}%
@@ -496,7 +526,7 @@
 % left and a short note on the right, then the code.
 %   \codefile{code/fitting.py}{Python-Modul}
 %   \codefile[zeeman.ipynb]{code/zeeman.py}{Jupyter-Notebook, exportiert}
-\newcommand\fp@basename[1]{%
+\newcommand\lr@basename[1]{%
   \filename@parse{#1}\filename@base
   \ifx\filename@ext\relax\else.\filename@ext\fi}
 \newcommand\codefile[3][]{%
@@ -504,7 +534,7 @@
   \needspace{5\baselineskip}%
   \noindent
   {\smallprintfont\ttfamily
-    \if\relax\detokenize{#1}\relax\fp@basename{#2}\else#1\fi}%
+    \if\relax\detokenize{#1}\relax\lr@basename{#2}\else#1\fi}%
   \hfill{\smallprintfont\itshape #3}\par
   \nobreak
   \lstinputlisting{#2}}
@@ -526,7 +556,9 @@
   \hypersetup{
     pdftitle    = {\@title},
     pdfauthor   = {\@author},
-    pdfsubject  = {\fp@course\ifx\fp@experiment\@empty\else, Versuch \fp@experiment\fi},
+    pdfsubject  = {\lr@course
+      \ifx\lr@course\@empty\else\ifx\lr@experiment\@empty\else, \fi\fi
+      \ifx\lr@experiment\@empty\else Versuch \lr@experiment\fi},
   }}
 \RequirePackage[ngerman, nameinlink, noabbrev, capitalise]{cleveref}
 % \cref{eq} -> "(2.1)", \Cref{eq} -> "Gleichung (2.1)" (both must be set,
