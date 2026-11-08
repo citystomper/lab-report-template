@@ -1,1 +1,60 @@
 \section{Auswertung und Ergebnisse}
+% Beispielinhalt: alles unterhalb der \section-Zeile kann gelöscht werden.
+
+\blindtext
+
+\begin{figure}[htbp]
+  \centering
+  \begin{subfigure}{0.45\textwidth}
+    \includegraphics[width=\linewidth]{example-image-b}
+    \caption{ohne Magnetfeld}
+    \label{fig:spektrum-ohne}
+  \end{subfigure}\hfill
+  \begin{subfigure}{0.45\textwidth}
+    \includegraphics[width=\linewidth]{example-image-c}
+    \caption{mit Magnetfeld}
+    \label{fig:spektrum-mit}
+  \end{subfigure}
+  \caption{Interferenzmuster der roten Cadmiumlinie. Lange Beschriftungen
+    werden im Blocksatz gesetzt, kurze zentriert}
+  \label{fig:spektren}
+\end{figure}
+
+\Cref{fig:spektren} zeigt die Interferenzmuster; in
+\cref{fig:spektrum-mit} ist die Aufspaltung jeder Ordnung in drei Linien
+zu erkennen. Aus den Abständen folgt mit \cref{eq:zeeman} die
+Energieaufspaltung in \cref{tab:messwerte}.
+
+\begin{table}[htbp]
+  \caption{Theoretische und gemessene Energieaufspaltung $\Delta E$ in
+    Abhängigkeit vom Magnetfeld $B$}
+  \label{tab:messwerte}
+  \centering
+  \begin{tabular}{
+      S[table-format=1.2]
+      S[table-format=2.2]
+      S[table-format=2.1(2)]}
+    \toprule
+    {$B$ / \unit{\tesla}} & {$\Delta E_\text{theo}$ / \unit{\micro\electronvolt}}
+      & {$\Delta E_\text{exp}$ / \unit{\micro\electronvolt}} \\
+    \midrule
+    0.25 & 14.47 & 14.1(8)  \\
+    0.50 & 28.94 & 29.5(8)  \\
+    0.75 & 43.41 & 42.7(9)  \\
+    1.00 & 57.88 & 58.6(10) \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.7\textwidth]{example-image}
+  \caption{Gemessene Energieaufspaltung über dem Magnetfeld mit linearer
+    Anpassung}
+  \label{fig:fit}
+\end{figure}
+
+Eine lineare Anpassung (\cref{fig:fit}) ergibt das Bohrsche Magneton zu
+$\mu_\mathrm{B} = \qty{58.1(9)}{\micro\electronvolt\per\tesla}$.
+
+\blindtext
