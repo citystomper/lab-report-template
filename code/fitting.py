@@ -1,4 +1,4 @@
-"""Fit routines for the Zeeman experiment."""
+"""Fit routines used by the analysis notebook."""
 import numpy as np
 
 

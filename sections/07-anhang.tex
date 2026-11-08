@@ -2,16 +2,16 @@
 % Pro Code-Datei ein Unterabschnitt: ein, zwei Sätze, wofür die Datei da ist,
 % dann \codefile[angezeigter Name]{Pfad}{Hinweis}. Zuerst das Notebook,
 % danach die Module.
-% Notebook exportieren:  jupyter nbconvert --to script zeeman.ipynb
+% Notebook exportieren:  jupyter nbconvert --to script auswertung.ipynb
 %   (--no-prompt entfernt die "# In[n]:"-Zeilen,
 %    --TemplateExporter.exclude_markdown=True die Markdown-Zellen)
 % Beispielinhalt: Unterabschnitte und Dateien in code/ können gelöscht werden.
 
 \subsection{Auswertungsnotebook}\label{sec:notebook}
-Das Notebook \texttt{zeeman.ipynb} führt die gesamte Auswertung durch und
-erzeugt \cref{fig:fit}. Markdown-Zellen erscheinen als Kommentare,
+Das Notebook \texttt{auswertung.ipynb} führt die gesamte Auswertung durch und
+erzeugt \cref{fig:d}. Markdown-Zellen erscheinen als Kommentare,
 \texttt{\# In[n]:} markiert die Zellen.
-\codefile[zeeman.ipynb]{code/zeeman.py}{Jupyter-Notebook, exportiert}
+\codefile[auswertung.ipynb]{code/auswertung.py}{Jupyter-Notebook, exportiert}
 
 \subsection{Modul \texttt{fitting.py}}\label{sec:fitting}
 Gewichtete Anpassung einer Ursprungsgeraden; wird in Zelle~3 des
