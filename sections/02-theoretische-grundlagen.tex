@@ -1,2 +1,43 @@
 \section{Theoretische Grundlagen}
-Blabla \cite{zinth_optik_2018}.
+% Beispielinhalt: alles unterhalb der \section-Zeile kann gelöscht werden.
+
+\blindtext{} Eine ausführliche Darstellung findet sich in
+\cite{zinth_optik_2018}.
+
+\subsection{Zeeman-Effekt}
+
+Ein Atom mit dem Gesamtdrehimpuls $J$ besitzt im Magnetfeld $B$ die
+Zusatzenergie
+\begin{equation}
+  E_{m_J} = \mu_\mathrm{B}\, g_J\, m_J\, B ,
+  \label{eq:energie}
+\end{equation}
+wobei $m_J \in \{-J, \dots, J\}$ die magnetische Quantenzahl ist.
+
+% Gleichung mit Namen: der Name steht links, die Nummer rechts.
+\begin{equation}
+  \text{Zeeman-Aufspaltung:}\qquad
+  \Delta E = \mu_\mathrm{B}\, g_J\, \Delta m_J\, B
+  \label{eq:zeeman}
+\end{equation}
+
+Für den normalen Zeeman-Effekt ist $g_J = 1$, sodass
+\cref{eq:zeeman} mit $\Delta m_J = \pm 1$ direkt die Linienaufspaltung
+liefert. Mit \Cref{eq:energie} am Satzanfang wird das Wort
+\enquote{Gleichung} mitgesetzt.
+
+\subsection{Landé-Faktor}
+
+\blindtext
+
+Mehrzeilige Rechnungen werden mit \texttt{align} gesetzt; jede Zeile
+erhält eine eigene Nummer, \verb|\notag| unterdrückt sie:
+\begin{align}
+  g_J &= 1 + \frac{J(J+1) + S(S+1) - L(L+1)}{2J(J+1)}
+        \label{eq:lande} \\
+      &= 1 + \frac{3}{4}\cdot\frac{1}{2} \notag \\
+      &= \frac{11}{8} .
+        \label{eq:lande-wert}
+\end{align}
+\Cref{eq:lande} gilt in LS-Kopplung, \cref{eq:lande-wert} ist ein
+Beispielwert.

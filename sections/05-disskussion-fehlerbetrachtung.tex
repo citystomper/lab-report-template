@@ -1,1 +1,28 @@
 \section{Diskussion und Fehlerbetrachtung}
+% Beispielinhalt: alles unterhalb der \section-Zeile kann gelöscht werden.
+
+\blindtext
+
+Der Messwert aus \cref{fig:fit} weicht um
+$\qty{0.4}{\percent}$ vom Literaturwert ab \cite{zinth_optik_2018}.
+Als Fehlerquellen kommen infrage:
+\begin{itemize}
+  \item die Ungenauigkeit der Hallsonde,
+  \item Inhomogenitäten des Magnetfeldes,
+    \begin{itemize}
+      \item am Rand der Polschuhe,
+      \item durch Remanenz des Eisenkerns,
+    \end{itemize}
+  \item das Ablesen der Linienpositionen in \cref{fig:spektren}.
+\end{itemize}
+
+Die Unsicherheit von $\Delta E$ folgt aus \cref{eq:zeeman} nach
+Gaußscher Fehlerfortpflanzung:
+\begin{equation}
+  \frac{\sigma_{\Delta E}}{\Delta E}
+  = \sqrt{\left(\frac{\sigma_B}{B}\right)^{2}
+        + \left(\frac{\sigma_{\delta a}}{\delta a}\right)^{2}} .
+  \label{eq:fehler}
+\end{equation}
+
+\blindtext

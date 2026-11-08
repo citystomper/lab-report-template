@@ -76,7 +76,6 @@
 \newcommand\Titlefont{\normalfont\fontsize{16}{18}\bfseries\selectfont}
 \newcommand\Authorfont{\fontsize{10}{12}\selectfont}
 \newcommand\addressfont{\fontsize{8}{10}\selectfont\raggedright}
-\newcommand\keywordfont{\fontsize{8}{10}\selectfont}
 \newcommand\abstractheadfont{\normalfont\fontsize{9}{11}\bfseries\selectfont}
 \newcommand\abstractsubheadfont{\normalfont\fontsize{9}{11}\bfseries\selectfont}
 \newcommand\abstractfont{\fontsize{9}{11}\selectfont}
@@ -150,10 +149,12 @@
   \renewcommand\contentsname{Inhalt}%
   \renewcommand\abstractname{Abstract}%
 }
-\newcommand\keywordname{Schlüsselwörter}
 \newcommand\authorandname{und}
 % CUP: 257-258 -- no word fragments shorter than three letters
 \renewcommand*\ngermanhyphenmins{33}
+% Dates as DD.MM.YYYY (\today, and the default \date)
+\addto\datengerman{%
+  \renewcommand\today{\two@digits{\day}.\two@digits{\month}.\the\year}}
 
 % ============================================================================
 %  6. Front matter
@@ -170,9 +171,11 @@
 % Items of the small info line at the top left of the title page
 \newcommand*\course[1]{\gdef\fp@course{#1}}
 \newcommand*\experiment[1]{\gdef\fp@experiment{#1}}
+\newcommand*\group[1]{\gdef\fp@group{#1}}
 \newcommand*\logo[1]{\gdef\fp@logo{#1}}
 \course{Fortgeschrittenenpraktikum}
 \experiment{}
+\group{}
 \logo{assets/logos/CUP_Logo}
 
 % \title[short title for the running head]{full title}  % CUP: 387-389
@@ -207,12 +210,6 @@
     \if\relax\detokenize{#1}\relax\else\textsuperscript{#1}\fi
   \fi}
 
-% \keywords[label]{text}, may be used several times  % CUP: 510-514
-\gdef\@keywords{}
-\gdef\fp@pdfkeywords{}
-\newcommand\keywords[2][\keywordname]{%
-  \g@addto@macro\@keywords{\par\addvspace{5pt}{\keywordfont\textbf{#1:} #2\par}}%
-  \ifx\fp@pdfkeywords\@empty\gdef\fp@pdfkeywords{#2}\fi}
 
 % ---- Printing --------------------------------------------------------------
 \newcommand\fp@author[1]{\csname fp@author@#1\endcsname}
@@ -223,11 +220,17 @@
   \else \fp@author{1}, \fp@author{2} \authorandname~\fp@author{3}%
   \fi}
 
-% Top-left info line: \textit{course}, Versuch X, date
+% Top-left info block, two lines like CUP's journal line + DOI line:
+%   \textit{course}, Versuch X, Gruppe Y
+%   date
+% (empty items are left out)
 \newcommand\fp@infoline{%
   \textit{\fp@course}%
   \ifx\fp@experiment\@empty\else, Versuch~\fp@experiment\fi
-  \ifx\@date\@empty\else, \@date\fi}
+  \ifx\fp@group\@empty\else, Gruppe~\fp@group\fi
+  % (conditional closed before the \\ so the table row ends cleanly)
+  \ifx\@date\@empty\expandafter\@gobble\else\expandafter\@firstofone\fi
+    {\\\@date}}
 
 % Title block  % CUP: 523-548 (history and abstract moved out)
 \renewcommand\@maketitle{%
@@ -244,7 +247,6 @@
       {\Authorfont\fp@printauthors\par}%
       {\vskip7pt\addressfont\fp@affiliations\par}%
     \fi
-    {\ifx\@keywords\@empty\else\@keywords\fi\par}%
   }\par
   % CUP has 22pt before the abstract head (and 23pt after the whole block,
   % added by the abstract environment); without an abstract this 22pt remains.
@@ -291,7 +293,7 @@
       % second column avoids an underfull box without moving anything)
       \begin{tabular*}{\textwidth}[b]{@{}l@{\extracolsep{\fill}}r@{}}%
         \fp@infoline &
-      \end{tabular*}}}}%
+      \end{tabular*}}}\vss}%
     \hss}}%
   \def\@oddfoot{\headerfont\hfil\thepage\hfil}%
   \let\@evenhead\@oddhead
@@ -466,26 +468,46 @@
 % ============================================================================
 % 14. Code
 % ============================================================================
+% No syntax highlighting and no background (saves ink when printed):
+% code in the reference font size between two hairlines, as in booktabs
+% tables, with grey line numbers in the left margin.
+\RequirePackage{xcolor}
 \RequirePackage{listings}
-% No syntax highlighting: monospaced, framed, line-numbered code,
-% set in the same size as the references.
+\RequirePackage{needspace}
+\renewcommand\lstlistingname{Quellcode}
 \lstset{
-  basicstyle=\ttfamily\smallprintfont,
-  numberstyle=\tiny,
-  numbersep=5pt,
-  breaklines=true,
-  showstringspaces=false,
-  frame=single
+  basicstyle       = \ttfamily\smallprintfont,
+  numbers          = left,
+  numberstyle      = \fontsize{6}{10}\selectfont\ttfamily\color{black!45},
+  numbersep        = 8pt,
+  frame            = tb,
+  framerule        = .15pt,
+  framesep         = 4pt,
+  aboveskip        = 2pt,
+  belowskip        = 10pt,
+  columns          = fullflexible,
+  keepspaces       = true,
+  breaklines       = true,
+  showstringspaces = false,
 }
 
-\RequirePackage{xcolor}
-\RequirePackage[most]{tcolorbox}
-\newtcolorbox{codeblockbox}{
-  enhanced, breakable,
-  colback=black!4, colframe=black!4,
-  boxrule=0pt, arc=2pt,
-  left=8pt, right=8pt, top=6pt, bottom=6pt,
-}
+% \codefile[shown name]{path}{note}
+% Header line with the file name (taken from the path unless given) on the
+% left and a short note on the right, then the code.
+%   \codefile{code/fitting.py}{Python-Modul}
+%   \codefile[zeeman.ipynb]{code/zeeman.py}{Jupyter-Notebook, exportiert}
+\newcommand\fp@basename[1]{%
+  \filename@parse{#1}\filename@base
+  \ifx\filename@ext\relax\else.\filename@ext\fi}
+\newcommand\codefile[3][]{%
+  \par\addvspace{10pt}%
+  \needspace{5\baselineskip}%
+  \noindent
+  {\smallprintfont\ttfamily
+    \if\relax\detokenize{#1}\relax\fp@basename{#2}\else#1\fi}%
+  \hfill{\smallprintfont\itshape #3}\par
+  \nobreak
+  \lstinputlisting{#2}}
 
 % ============================================================================
 % 15. Bibliography
@@ -505,10 +527,15 @@
     pdftitle    = {\@title},
     pdfauthor   = {\@author},
     pdfsubject  = {\fp@course\ifx\fp@experiment\@empty\else, Versuch \fp@experiment\fi},
-    pdfkeywords = {\fp@pdfkeywords},
   }}
 \RequirePackage[ngerman, nameinlink, noabbrev, capitalise]{cleveref}
+% \cref{eq} -> "(2.1)", \Cref{eq} -> "Gleichung (2.1)" (both must be set,
+% otherwise cleveref derives \Cref from \cref and breaks)
 \crefformat{equation}{#2(#1)#3}
+\Crefformat{equation}{Gleichung~#2(#1)#3}
+% cleveref files listings under the type "listing"
+\crefname{listing}{Quellcode}{Quellcodes}
+\Crefname{listing}{Quellcode}{Quellcodes}
 
 % ============================================================================
 \pagestyle{report}
