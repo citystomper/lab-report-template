@@ -144,7 +144,6 @@
   \renewcommand\contentsname{Inhalt}%
   \renewcommand\abstractname{Abstract}%
 }
-\newcommand\authorandname{und}
 \renewcommand*\ngermanhyphenmins{33}
 % babel redefines \today on every language switch.
 \addto\datengerman{%
@@ -219,8 +218,8 @@
 \newcommand\lr@printauthors{%
   \ifcase\value{lr@authors}%
   \or \lr@author{1}%
-  \or \lr@author{1} \authorandname~\lr@author{2}%
-  \else \lr@author{1}, \lr@author{2} \authorandname~\lr@author{3}%
+  \or \lr@author{1}, \lr@author{2}%
+  \else \lr@author{1}, \lr@author{2}, \lr@author{3}%
   \fi}
 
 % Title-page head (two-column table):
@@ -267,7 +266,7 @@
       {\Authorfont\lr@printauthors\par}%
     \fi
     \ifnum\value{lr@affiliations}>\z@
-      \vskip\ifnum\value{lr@authors}>\z@ 7pt\else 10pt\fi
+      \vskip\ifnum\value{lr@authors}>\z@ 3pt\else 10pt\fi
       {\addressfont\lr@affiliations\par}%
     \fi
   }\par
