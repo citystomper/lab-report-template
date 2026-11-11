@@ -71,6 +71,7 @@
 
 \newcommand\Artcatfont{\normalfont\fontsize{8.5}{10.5}\bfseries\selectfont}
 \newcommand\Titlefont{\normalfont\fontsize{16}{18}\bfseries\selectfont}
+\newcommand\Subtitlefont{\normalfont\fontsize{12}{14}\itshape\selectfont}
 \newcommand\Authorfont{\fontsize{10}{12}\selectfont}
 \newcommand\addressfont{\fontsize{8}{10}\selectfont\raggedright}
 \newcommand\abstractheadfont{\normalfont\fontsize{9}{11}\bfseries\selectfont}
@@ -187,6 +188,9 @@
   \if\relax\detokenize{#1}\relax\gdef\@shorttitle{#2}\else\gdef\@shorttitle{#1}\fi}
 \title{Titel}
 
+\newcommand\subtitle[1]{\gdef\lr@subtitle{#1}}
+\subtitle{}
+
 \newcounter{lr@authors}
 \gdef\@author{}
 \renewcommand\author[2][]{%
@@ -254,6 +258,10 @@
       \vskip15.5pt
     \fi
     {\Titlefont\@title\par}%
+    \ifx\lr@subtitle\@empty\else
+      \vskip3pt
+      {\Subtitlefont\lr@subtitle\par}%
+    \fi
     \ifnum\value{lr@authors}>\z@
       \vskip10pt
       {\Authorfont\lr@printauthors\par}%
