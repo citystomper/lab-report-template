@@ -97,8 +97,9 @@
 % ============================================================================
 %  4. Typesetting parameters
 % ============================================================================
-\setlength\parindent{12pt}
-\setlength\parskip{0pt}
+\setlength\parindent{0pt}
+% Block paragraphs: half a line (leading is 12pt) with a little give.
+\setlength\parskip{6pt \@plus 1.5pt \@minus 1pt}
 \setlength\lineskip{1\p@}
 \setlength\normallineskip{1\p@}
 
@@ -124,13 +125,14 @@
 \renewcommand\floatpagefraction{.887}
 \setlength\floatsep    {18\p@ \@plus 2\p@ \@minus 2\p@}
 \setlength\textfloatsep{19\p@ \@plus 2\p@ \@minus 4\p@}
-\setlength\intextsep   {18\p@ \@plus 2\p@ \@minus 2\p@}
+% \parskip is added below an in-text float, so this is 6pt less than before.
+\setlength\intextsep   {12\p@ \@plus 2\p@ \@minus 2\p@}
 
 \sloppy
 \vbadness=9999
 \tolerance=9999
 \frenchspacing
-\flushbottom
+\raggedbottom
 \linepenalty=100
 
 \RequirePackage{microtype}
@@ -248,7 +250,7 @@
 
 \renewcommand\@maketitle{%
   \noindent\vbox{%
-    \hsize\textwidth\parindent\z@
+    \hsize\textwidth\parindent\z@ \parskip\z@
     \vskip7pt
     \ifx\lr@arttype\@empty\else
       % soul needs the literal text, not a macro.
@@ -270,8 +272,8 @@
       {\addressfont\lr@affiliations\par}%
     \fi
   }\par
-  % Equal to the abstract head's beforeskip; \addvspace keeps the larger.
-  \addvspace{22pt}}
+  % 22pt in total: the following paragraph adds \parskip (6pt) on top.
+  \addvspace{16pt}}
 
 \renewcommand\maketitle{\par
   \@afterindentfalse
@@ -333,9 +335,9 @@
 \def\@seccntformat#1{{\csname the#1\endcsname.}\hskip.5em}
 
 \renewcommand\section{\@startsection{section}{1}{\z@}%
-  {-18pt \@plus -2ex \@minus 0ex}{6pt}{\sectionfont}}
+  {-18pt \@plus -2ex \@minus 0ex}{0.001pt}{\sectionfont}}
 \renewcommand\subsection{\@startsection{subsection}{2}{\z@}%
-  {-18pt \@plus 0ex \@minus 0ex}{6pt}{\subsectionfont}}
+  {-18pt \@plus 0ex \@minus 0ex}{0.001pt}{\subsectionfont}}
 \renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}%
   {-12.5pt \@plus 0ex \@minus 0ex}{0.001pt}{\subsubsectionfont}}
 \renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
@@ -355,7 +357,9 @@
   \if@nobreak
     \everypar{}\ifnum#2=2\vskip0pt\else\ifnum#2=3\vskip1pt\else\ifnum#2=4\vskip1pt\fi\fi\fi
   \else
-    \addpenalty\@secpenalty\addvspace\@tempskipa
+    % The heading text is itself a paragraph and gets \parskip above it;
+    % cancel that so the gap above a heading is exactly #4.
+    \addpenalty\@secpenalty\addvspace\@tempskipa\vskip-\parskip
   \fi
   \@ifstar
     {\@ssect{#3}{#4}{#5}{#6}}%
@@ -370,7 +374,7 @@
 \setcounter{tocdepth}{2}
 \renewcommand\tableofcontents{%
   \section*{\contentsname}%
-  \@starttoc{toc}}
+  \begingroup\parskip\z@\vskip6pt\@starttoc{toc}\endgroup}
 \renewcommand*\l@section[2]{%
   \ifnum \c@tocdepth >\z@
     \addpenalty\@secpenalty
@@ -394,7 +398,7 @@
 % 10. Lists
 % ============================================================================
 \RequirePackage{enumitem}
-\setlist{topsep=6pt, partopsep=0pt, itemsep=0pt, parsep=0pt,
+\setlist{topsep=0pt, partopsep=0pt, itemsep=0pt, parsep=0pt,
   labelsep=.5em, listparindent=\parindent, before=\raggedright}
 \setlist[enumerate,1]{label=\arabic*., leftmargin=*}
 \setlist[enumerate,2]{label=(\alph*), leftmargin=*}
@@ -481,7 +485,7 @@
   framerule        = .15pt,
   framesep         = 4pt,
   aboveskip        = 2pt,
-  belowskip        = 10pt,
+  belowskip        = 4pt,
   columns          = fullflexible,
   keepspaces       = true,
   breaklines       = true,
@@ -493,7 +497,7 @@
   \filename@parse{#1}\filename@base
   \ifx\filename@ext\relax\else.\filename@ext\fi}
 \newcommand\codefile[3][]{%
-  \par\addvspace{10pt}%
+  \par\addvspace{4pt}%
   \needspace{5\baselineskip}%
   \noindent
   {\smallprintfont\ttfamily
