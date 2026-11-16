@@ -183,6 +183,52 @@
       \unexpanded\expandafter{\lr@logoopts}]{\unexpanded\expandafter{\lr@logo}}}%
   \x}
 
+% \emblem[options]{file}: large watermark on the title page only, cut off
+% by the right and bottom page edges.
+%   width  = width of the emblem                     (default 0.85\paperwidth)
+%   color  = any xcolor colour, e.g. black!15        (default black!8)
+%   right  = share of the emblem past the right edge  (default 0.333)
+%   bottom = share of the emblem past the bottom edge (default 0.333)
+% right/bottom: 0 = flush with the edge, negative values move it onto the page.
+% Meant for single-colour (black) artwork: black becomes `color', white stays.
+\RequirePackage{tikz}
+\define@key{lr@emblem}{width}{\def\lr@emblemwidth{#1}}
+\define@key{lr@emblem}{color}{\def\lr@emblemcolor{#1}}
+\define@key{lr@emblem}{right}{\def\lr@emblemright{#1}}
+\define@key{lr@emblem}{bottom}{\def\lr@emblembottom{#1}}
+\newcommand\emblem[2][]{\gdef\lr@emblem{#2}\gdef\lr@emblemopts{#1}}
+\emblem{}
+\newsavebox\lr@emblembox
+\newcommand\lr@drawemblem{%
+  \begingroup
+    \def\lr@emblemwidth{0.85\paperwidth}%
+    \def\lr@emblemcolor{black!8}%
+    \def\lr@emblemright{0.333}%
+    \def\lr@emblembottom{0.333}%
+    \def\@tempa{\setkeys{lr@emblem}}%
+    \expandafter\@tempa\expandafter{\lr@emblemopts}%
+    \sbox\lr@emblembox{\includegraphics[width=\lr@emblemwidth]{\lr@emblem}}%
+    % Recolour: white underlay, artwork, then the colour with blend mode
+    % `lighten' (per channel max), which turns black into the colour and
+    % leaves white alone. The underlay is 1pt larger so that no viewer
+    % shows an anti-aliasing seam along the edges of the colour rectangle.
+    \sbox\lr@emblembox{\tikz{%
+      \path[use as bounding box] (0,0) rectangle
+        (\wd\lr@emblembox,\ht\lr@emblembox);
+      \fill[white] (-1pt,-1pt) rectangle
+        ([shift={(1pt,1pt)}]\wd\lr@emblembox,\ht\lr@emblembox);
+      \node[inner sep=0, outer sep=0, anchor=south west] at (0,0)
+        {\usebox\lr@emblembox};
+      \fill[fill=\lr@emblemcolor, blend mode=lighten]
+        (0,0) rectangle (\wd\lr@emblembox,\ht\lr@emblembox);}}%
+    % shipout/background: origin at the top-left page corner, y upwards.
+    \put(0,0){%
+      \kern\dimexpr\paperwidth-\wd\lr@emblembox
+        +\lr@emblemright\wd\lr@emblembox\relax
+      \raise\dimexpr-\paperheight-\lr@emblembottom\ht\lr@emblembox\relax
+      \box\lr@emblembox}%
+  \endgroup}
+
 % \title[short title for the running head]{full title}
 \renewcommand\title[2][]{%
   \gdef\@title{#2}%
@@ -248,6 +294,8 @@
        {\\\@date&}}%
     {\@date&\lr@logocell}}
 
+% article defines \@maketitle only without its `titlepage' option.
+\providecommand\@maketitle{}
 \renewcommand\@maketitle{%
   \noindent\vbox{%
     \hsize\textwidth\parindent\z@ \parskip\z@
@@ -275,10 +323,18 @@
   % 22pt in total: the following paragraph adds \parskip (6pt) on top.
   \addvspace{16pt}}
 
+% Class option `titlepage' (from article): the title block gets a page of
+% its own without a page number; numbering starts at 1 on the next page.
+% `gobble' leaves the title page without any number, also in the page
+% label PDF viewers show.
 \renewcommand\maketitle{\par
   \@afterindentfalse
   \begingroup
     \newpage
+    \if@titlepage\pagenumbering{gobble}\fi
+    \ifx\lr@emblem\@empty\else
+      \AddToHookNext{shipout/background}{\lr@drawemblem}%
+    \fi
     \global\@topnum\z@ % no floats at the top of the first page
     \@maketitle
     \thispagestyle{titlepage}%
@@ -286,7 +342,12 @@
   \setcounter{footnote}{0}%
   \global\let\maketitle\relax
   \global\let\@maketitle\relax
-  \@afterheading}
+  \if@titlepage
+    \newpage
+    \pagenumbering{arabic}%
+  \else
+    \expandafter\@afterheading
+  \fi}
 
 \newcommand\abstracthead{\@startsection{section}{1}{\z@}%
   {-22pt \@plus2ex \@minus0ex}{0.0001pt}{\abstractheadfont}}
@@ -310,7 +371,7 @@
         \lr@infoline
       \end{tabular*}}}\vss}%
     \hss}}%
-  \def\@oddfoot{\headerfont\hfil\thepage\hfil}%
+  \def\@oddfoot{\if@titlepage\else\headerfont\hfil\thepage\hfil\fi}%
   \let\@evenhead\@oddhead
   \let\@evenfoot\@oddfoot}
 

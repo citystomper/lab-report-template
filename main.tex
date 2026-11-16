@@ -1,10 +1,13 @@
 % !TeX program = lualatex
-\documentclass{lab-report}
+\documentclass[titlepage]{lab-report} % titlepage: title on its own page,
+                                         % numbering starts on page 2
 
 % Anything left out (except \title) is simply not printed.
 
 % ---- Title page head --------------------------------------------------------
 \logo{assets/logos/placeholder-logo}   % top right; e.g. \logo[height=1cm]{…}
+\emblem{assets/logos/lmu-siegel}       % title-page watermark, bottom right; options:
+                                       % [width=…, color=black!8, right=.333, bottom=.333]
 \course{Fortgeschrittenenpraktikum 2}  % top left, first line
 \experiment{???}
 \group{??}
@@ -34,6 +37,7 @@ Kurze Zusammenfassung des Versuchs: Ziel, Methode, wichtigste Ergebnisse.
 \end{abstract}
 
 \tableofcontents
+\clearpage
 
 \input{sections/01-einleitung}
 \input{sections/02-theoretische-grundlagen}
