@@ -389,9 +389,9 @@
 % ============================================================================
 \newcommand\sectionfont{\normalfont\fontsize{10}{12}\bfseries\selectfont\raggedright}
 \newcommand\subsectionfont{\normalfont\fontsize{10}{12}\bfseries\itshape\selectfont\raggedright}
-\newcommand\subsubsectionfont{\normalfont\fontsize{9.5}{11.5}\bfseries\selectfont\raggedright}
-\newcommand\paragraphfont{\normalfont\fontsize{9.5}{11.5}\itshape\selectfont\raggedright\boldmath}
-\newcommand\subparagraphfont{\normalfont\fontsize{10}{12}\bfseries\itshape\selectfont\raggedright}
+\newcommand\subsubsectionfont{\normalfont\fontsize{9.5}{11.5}\bfseries\itshape\selectfont\raggedright}
+\newcommand\paragraphfont{\normalfont\fontsize{9.5}{11.5}\bfseries\itshape\selectfont\raggedright}
+\newcommand\subparagraphfont{\normalfont\fontsize{9.5}{11.5}\itshape\selectfont\raggedright\boldmath}
 
 \def\@seccntformat#1{{\csname the#1\endcsname.}\hskip.5em}
 
@@ -402,9 +402,9 @@
 \renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}%
   {-12.5pt \@plus 0ex \@minus 0ex}{0.001pt}{\subsubsectionfont}}
 \renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
-  {12.5pt \@plus1ex \@minus.2ex}{0.0001pt}{\paragraphfont}}
+  {-6pt \@plus1ex \@minus .2ex}{-1em}{\paragraphfont}}
 \renewcommand\subparagraph{\@startsection{subparagraph}{5}{\z@}%
-  {-6pt \@plus1ex \@minus .2ex}{-1em}{\subparagraphfont}}
+  {12.5pt \@plus1ex \@minus.2ex}{0.0001pt}{\subparagraphfont}}
 
 % Kernel \@startsection plus fixed skips between consecutive headings.
 \def\@startsection#1#2#3#4#5#6{%
