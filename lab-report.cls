@@ -69,7 +69,7 @@
 \setmathfont{texgyretermes-math.otf}
 \setmonofont{JetBrains Mono}[Scale=MatchLowercase]
 
-\newcommand\Artcatfont{\normalfont\fontsize{8.5}{10.5}\bfseries\selectfont}
+\newcommand\Doctypefont{\normalfont\fontsize{8.5}{10.5}\bfseries\selectfont}
 \newcommand\Titlefont{\normalfont\fontsize{16}{18}\bfseries\selectfont}
 \newcommand\Subtitlefont{\normalfont\fontsize{12}{14}\itshape\selectfont}
 \newcommand\Authorfont{\fontsize{10}{12}\selectfont}
@@ -161,15 +161,16 @@
 % No content defaults except \title; unset items are omitted.
 
 \sodef\letterspacetwty{}{.1em}{.4em plus1em}{.5em plus 1em minus1em}
-\newcommand\articletype[1]{\gdef\lr@arttype{#1}}
-\articletype{}
+\newcommand\documenttype[1]{\gdef\lr@doctype{#1}}
+\documenttype{}
 
-\newcommand*\course[1]{\gdef\lr@course{#1}}
-\newcommand*\experiment[1]{\gdef\lr@experiment{#1}}
-\newcommand*\group[1]{\gdef\lr@group{#1}}
-\course{}
-\experiment{}
-\group{}
+% \infoline{free text}: first line of the title-page head, e.g. course,
+% experiment and group. Wraps after half the text width (the logo is at
+% most 0.4\textwidth wide, so the two never meet); \\ breaks manually.
+% Also used as the PDF subject.
+\newcommand*\infoline[1]{\gdef\lr@infoline{#1}}
+\infoline{}
+\newcommand\lr@infolinewidth{0.5\textwidth}
 
 % \logo[includegraphics options]{file}
 % Default height 18.82pt: rendered height of the original CUP logo.
@@ -271,25 +272,39 @@
   \fi}
 
 % Title-page head (two-column table):
-%   \textit{course}, Versuch X, Gruppe Y          [logo]
+%   \infoline text, wrapped after             [logo]
+%   \lr@infolinewidth if too long
 %   date
-% Without a first line the date moves up.
-\newif\iflr@lineone
-\newcommand\lr@item[1]{\lr@sep#1\def\lr@sep{, }\lr@lineonetrue}
+% Without an info line the date moves up.
+
+% Typesets \infoline into \lr@infobox (global: the head is only output at
+% shipout): a ragged-right paragraph of width \lr@infolinewidth, aligned
+% at its first line, which therefore stays where a single line would be.
+% The struts give every line, the last included, the full 9pt leading, so
+% the date follows at the usual distance. \lr@infoextra = the height the
+% head grew by, (lines-1) x 9pt.
+\newsavebox\lr@infobox
+\newdimen\lr@infoextra
+\newcommand\lr@setinfobox{%
+  \global\lr@infoextra\z@
+  \ifx\lr@infoline\@empty\else
+    \begingroup
+      \opheaderfont
+      \global\setbox\lr@infobox\hbox{\parbox[t]{\lr@infolinewidth}{%
+        \raggedright\strut\lr@infoline\strut}}%
+      \global\lr@infoextra\dimexpr\dp\lr@infobox-\dp\strutbox\relax
+    \endgroup
+  \fi}
 % Top edge at the row's cap height; \smash keeps the row height unchanged.
 \newcommand\lr@logocell{%
   \ifx\lr@logo\@empty\else
     \smash{\raisebox{\dimexpr\fontcharht\font`H-\height\relax}{\lr@includelogo}}%
   \fi}
-\newcommand\lr@infoline{%
-  \let\lr@sep\@empty\lr@lineonefalse
-  \ifx\lr@course\@empty\else\lr@item{\textit{\lr@course}}\fi
-  \ifx\lr@experiment\@empty\else\lr@item{Versuch~\lr@experiment}\fi
-  \ifx\lr@group\@empty\else\lr@item{Gruppe~\lr@group}\fi
+\newcommand\lr@titlehead{%
   % & and \\ must not occur inside an open conditional; branches are
   % resolved via \@firstoftwo/\@secondoftwo before the alignment sees them.
-  \iflr@lineone\expandafter\@firstoftwo\else\expandafter\@secondoftwo\fi
-    {&\lr@logocell
+  \ifx\lr@infoline\@empty\expandafter\@secondoftwo\else\expandafter\@firstoftwo\fi
+    {\copy\lr@infobox&\lr@logocell
      \ifx\@date\@empty\expandafter\@gobble\else\expandafter\@firstofone\fi
        {\\\@date&}}%
     {\@date&\lr@logocell}}
@@ -300,10 +315,13 @@
   \noindent\vbox{%
     \hsize\textwidth\parindent\z@ \parskip\z@
     \vskip7pt
-    \ifx\lr@arttype\@empty\else
+    % A wrapped info line grows down into the text area: move the title
+    % block down by the same amount (0pt for a single line).
+    \vskip\lr@infoextra
+    \ifx\lr@doctype\@empty\else
       % soul needs the literal text, not a macro.
-      \hbox to\textwidth{\Artcatfont
-        \expandafter\letterspacetwty\expandafter{\lr@arttype}\hfill}%
+      \hbox to\textwidth{\Doctypefont
+        \expandafter\letterspacetwty\expandafter{\lr@doctype}\hfill}%
       \vskip15.5pt
     \fi
     {\Titlefont\@title\par}%
@@ -336,6 +354,7 @@
       \AddToHookNext{shipout/background}{\lr@drawemblem}%
     \fi
     \global\@topnum\z@ % no floats at the top of the first page
+    \lr@setinfobox
     \@maketitle
     \thispagestyle{titlepage}%
   \endgroup
@@ -368,7 +387,7 @@
   \def\@oddhead{\hbox to\textwidth{%
     \vbox to\z@{\vskip-7pt\rlap{\parbox{\textwidth}{\opheaderfont
       \begin{tabular*}{\textwidth}[b]{@{}l@{\extracolsep{\fill}}r@{}}%
-        \lr@infoline
+        \lr@titlehead
       \end{tabular*}}}\vss}%
     \hss}}%
   \def\@oddfoot{\if@titlepage\else\headerfont\hfil\thepage\hfil\fi}%
@@ -584,10 +603,12 @@
   \hypersetup{
     pdftitle    = {\@title},
     pdfauthor   = {\@author},
-    pdfsubject  = {\lr@course
-      \ifx\lr@course\@empty\else\ifx\lr@experiment\@empty\else, \fi\fi
-      \ifx\lr@experiment\@empty\else Versuch \lr@experiment\fi},
-  }}
+  }%
+  % A manual \\ in \infoline separates items: ", " in the subject.
+  \begingroup
+    \pdfstringdefDisableCommands{\def\\{, }}%
+    \hypersetup{pdfsubject = {\lr@infoline}}%
+  \endgroup}
 \RequirePackage[ngerman, nameinlink, noabbrev, capitalise]{cleveref}
 % \Crefformat must be set too; the derived one breaks on #2(#1)#3.
 \crefformat{equation}{#2(#1)#3}
