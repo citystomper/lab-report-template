@@ -1,28 +1,26 @@
 % !TeX program = lualatex
-% Compile with LuaLaTeX (Overleaf: Menu > Compiler > LuaLaTeX).
-% Step-by-step instructions: GUIDE.md in the template repository.
-\documentclass[titlepage]{generalreport} % titlepage: title on its own page,
-                                         % numbering starts on page 2
+\documentclass[titlepage]{lab-report} % titlepage: title on its own page,
+                                      % numbering starts on page 2
 
 % Anything left out (except \title) is simply not printed.
 
 % ---- Title page head --------------------------------------------------------
-\logo{assets/logos/placeholder-logo}   % top right; e.g. \logo[height=1cm]{…}
-\emblem{assets/logos/placeholder-emblem} % title-page watermark, bottom right;
-                                       % options: [width=…, color=black!8,
-                                       % right=.333, bottom=.333]
-\infoline{\textit{Kurs oder Veranstaltung}, weitere Angaben}
+% \logo{assets/logos/placeholder-logo} % top right; e.g. \logo[height=1cm]{…}
+\emblem[width=0.85\paperwidth, color=black!4, right=0.23, bottom=0.1]{assets/lmu-siegel}
+                                       % title-page watermark, bottom right
+\infoline{\textit{Fortgeschrittenenpraktikum 2}, Versuch: H2 Laserspektroskopie, Gruppe 01}
                                        % top left, free text; wraps at half the
                                        % text width, \\ breaks manually
 \date{\today}                          % line below; or e.g. \date{10.10.2026}
 
 % ---- Title block -----------------------------------------------------------
-\documenttype{BERICHT}                 % label above the title, as typed
-\title[Kurztitel]{Titel des Berichts}  % [short title for the running head]
-\subtitle{Untertitel des Berichts}
+\documenttype{LABORBERICHT}            % label above the title, as typed
+\title[H2 Laserspektroskopie]{Hyperfeinstruktur der Rubidium-D2-Linie}
+                                       % [short title for the running head]
+\subtitle{Absorptions- und dopplerfreie Sättigungsspektroskopie}
 \author[1]{Vorname Nachname}           % one to three authors; [n] = number
 \author[1]{Vorname Nachname}           % of the author's affiliation
-\affiliation[1]{Institut, Universität, Stadt} % period is added automatically
+\affiliation[1]{Fakultät für Physik, Ludwig-Maximilians-Universität München}
 
 \addbibresource{references.bib}
 
@@ -40,7 +38,6 @@
 \tableofcontents
 \clearpage
 
-% One file per section; add, remove or reorder the lines as needed.
 \input{sections/einleitung}
 \input{sections/theorie}
 \input{sections/aufbau}

@@ -1,13 +1,13 @@
-%% generalreport.cls -- report class for LuaLaTeX/XeLaTeX with biber.
+%% lab-report.cls -- lab report class for LuaLaTeX/XeLaTeX with biber.
 %% Derived from the Cambridge University Press "Data/Math" journal template
 %% (CUP-JNL-DTM.cls, LPPL 1.3c, available from CUP's author templates):
-%% reduced to its layout and adapted for reports such as lab reports.
+%% reduced to its layout and adapted for lab reports.
 %%
 %% Copyright (C) 2026 citystomper
 %% This work may be distributed and/or modified under the conditions of the
 %% LaTeX Project Public License, version 1.3c or later (see LICENSE).
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{generalreport}[2026/11/21 v3.0 Report in CUP layout]
+\ProvidesClass{lab-report}[2026/11/21 v3.0 Lab report in CUP layout]
 
 % ============================================================================
 %  1. Base class and options
@@ -161,27 +161,27 @@
 % No content defaults except \title; unset items are omitted.
 
 \sodef\letterspacetwty{}{.1em}{.4em plus1em}{.5em plus 1em minus1em}
-\newcommand\documenttype[1]{\gdef\gr@doctype{#1}}
+\newcommand\documenttype[1]{\gdef\lr@doctype{#1}}
 \documenttype{}
 
 % \infoline{free text}: first line of the title-page head, e.g. course,
 % experiment and group. Wraps after half the text width (the logo is at
 % most 0.4\textwidth wide, so the two never meet); \\ breaks manually.
 % Also used as the PDF subject.
-\newcommand*\infoline[1]{\gdef\gr@infoline{#1}}
+\newcommand*\infoline[1]{\gdef\lr@infoline{#1}}
 \infoline{}
-\newcommand\gr@infolinewidth{0.5\textwidth}
+\newcommand\lr@infolinewidth{0.5\textwidth}
 
 % \logo[includegraphics options]{file}
 % Default height 18.82pt: rendered height of the original CUP logo.
-\newcommand\logo[2][]{\gdef\gr@logo{#2}\gdef\gr@logoopts{#1}}
+\newcommand\logo[2][]{\gdef\lr@logo{#2}\gdef\lr@logoopts{#1}}
 \logo{}
 % \edef: keyval only sees the user's options once they are expanded.
-\newcommand\gr@includelogo{%
+\newcommand\lr@includelogo{%
   \begingroup
     \edef\x{\endgroup\noexpand\includegraphics[height=18.82pt,
       width=0.4\noexpand\textwidth, keepaspectratio,
-      \unexpanded\expandafter{\gr@logoopts}]{\unexpanded\expandafter{\gr@logo}}}%
+      \unexpanded\expandafter{\lr@logoopts}]{\unexpanded\expandafter{\lr@logo}}}%
   \x}
 
 % \emblem[options]{file}: large watermark on the title page only, cut off
@@ -193,41 +193,41 @@
 % right/bottom: 0 = flush with the edge, negative values move it onto the page.
 % Meant for single-colour (black) artwork: black becomes `color', white stays.
 \RequirePackage{tikz}
-\define@key{gr@emblem}{width}{\def\gr@emblemwidth{#1}}
-\define@key{gr@emblem}{color}{\def\gr@emblemcolor{#1}}
-\define@key{gr@emblem}{right}{\def\gr@emblemright{#1}}
-\define@key{gr@emblem}{bottom}{\def\gr@emblembottom{#1}}
-\newcommand\emblem[2][]{\gdef\gr@emblem{#2}\gdef\gr@emblemopts{#1}}
+\define@key{lr@emblem}{width}{\def\lr@emblemwidth{#1}}
+\define@key{lr@emblem}{color}{\def\lr@emblemcolor{#1}}
+\define@key{lr@emblem}{right}{\def\lr@emblemright{#1}}
+\define@key{lr@emblem}{bottom}{\def\lr@emblembottom{#1}}
+\newcommand\emblem[2][]{\gdef\lr@emblem{#2}\gdef\lr@emblemopts{#1}}
 \emblem{}
-\newsavebox\gr@emblembox
-\newcommand\gr@drawemblem{%
+\newsavebox\lr@emblembox
+\newcommand\lr@drawemblem{%
   \begingroup
-    \def\gr@emblemwidth{0.85\paperwidth}%
-    \def\gr@emblemcolor{black!8}%
-    \def\gr@emblemright{0.333}%
-    \def\gr@emblembottom{0.333}%
-    \def\@tempa{\setkeys{gr@emblem}}%
-    \expandafter\@tempa\expandafter{\gr@emblemopts}%
-    \sbox\gr@emblembox{\includegraphics[width=\gr@emblemwidth]{\gr@emblem}}%
+    \def\lr@emblemwidth{0.85\paperwidth}%
+    \def\lr@emblemcolor{black!8}%
+    \def\lr@emblemright{0.333}%
+    \def\lr@emblembottom{0.333}%
+    \def\@tempa{\setkeys{lr@emblem}}%
+    \expandafter\@tempa\expandafter{\lr@emblemopts}%
+    \sbox\lr@emblembox{\includegraphics[width=\lr@emblemwidth]{\lr@emblem}}%
     % Recolour: white underlay, artwork, then the colour with blend mode
     % `lighten' (per channel max), which turns black into the colour and
     % leaves white alone. The underlay is 1pt larger so that no viewer
     % shows an anti-aliasing seam along the edges of the colour rectangle.
-    \sbox\gr@emblembox{\tikz{%
+    \sbox\lr@emblembox{\tikz{%
       \path[use as bounding box] (0,0) rectangle
-        (\wd\gr@emblembox,\ht\gr@emblembox);
+        (\wd\lr@emblembox,\ht\lr@emblembox);
       \fill[white] (-1pt,-1pt) rectangle
-        ([shift={(1pt,1pt)}]\wd\gr@emblembox,\ht\gr@emblembox);
+        ([shift={(1pt,1pt)}]\wd\lr@emblembox,\ht\lr@emblembox);
       \node[inner sep=0, outer sep=0, anchor=south west] at (0,0)
-        {\usebox\gr@emblembox};
-      \fill[fill=\gr@emblemcolor, blend mode=lighten]
-        (0,0) rectangle (\wd\gr@emblembox,\ht\gr@emblembox);}}%
+        {\usebox\lr@emblembox};
+      \fill[fill=\lr@emblemcolor, blend mode=lighten]
+        (0,0) rectangle (\wd\lr@emblembox,\ht\lr@emblembox);}}%
     % shipout/background: origin at the top-left page corner, y upwards.
     \put(0,0){%
-      \kern\dimexpr\paperwidth-\wd\gr@emblembox
-        +\gr@emblemright\wd\gr@emblembox\relax
-      \raise\dimexpr-\paperheight-\gr@emblembottom\ht\gr@emblembox\relax
-      \box\gr@emblembox}%
+      \kern\dimexpr\paperwidth-\wd\lr@emblembox
+        +\lr@emblemright\wd\lr@emblembox\relax
+      \raise\dimexpr-\paperheight-\lr@emblembottom\ht\lr@emblembox\relax
+      \box\lr@emblembox}%
   \endgroup}
 
 % \title[short title for the running head]{full title}
@@ -237,78 +237,78 @@
 \title{Titel}
 \date{} % article would default to \today
 
-\newcommand\subtitle[1]{\gdef\gr@subtitle{#1}}
+\newcommand\subtitle[1]{\gdef\lr@subtitle{#1}}
 \subtitle{}
 
-\newcounter{gr@authors}
+\newcounter{lr@authors}
 \gdef\@author{}
 \renewcommand\author[2][]{%
-  \stepcounter{gr@authors}%
-  \ifnum\value{gr@authors}>3
-    \ClassError{generalreport}{Too many authors}%
+  \stepcounter{lr@authors}%
+  \ifnum\value{lr@authors}>3
+    \ClassError{lab-report}{Too many authors}%
       {This template supports at most three authors.}%
   \fi
-  \expandafter\gdef\csname gr@author@\the\value{gr@authors}\endcsname
-    {#2\gr@affmark{#1}}%
+  \expandafter\gdef\csname lr@author@\the\value{lr@authors}\endcsname
+    {#2\lr@affmark{#1}}%
   \ifx\@author\@empty\gdef\@author{#2}\else\g@addto@macro\@author{, #2}\fi}
 
-\newcounter{gr@affiliations}
-\gdef\gr@affiliations{}
+\newcounter{lr@affiliations}
+\gdef\lr@affiliations{}
 \newcommand\affiliation[2][]{%
-  \stepcounter{gr@affiliations}%
-  \g@addto@macro\gr@affiliations{{\gr@affmark{#1}#2.}\par}}
+  \stepcounter{lr@affiliations}%
+  \g@addto@macro\lr@affiliations{{\lr@affmark{#1}#2.}\par}}
 
-\newcommand\gr@affmark[1]{%
-  \ifnum\value{gr@affiliations}>1
+\newcommand\lr@affmark[1]{%
+  \ifnum\value{lr@affiliations}>1
     \if\relax\detokenize{#1}\relax\else\textsuperscript{#1}\fi
   \fi}
 
 % ---- Printing --------------------------------------------------------------
-\newcommand\gr@author[1]{\csname gr@author@#1\endcsname}
-\newcommand\gr@printauthors{%
-  \ifcase\value{gr@authors}%
-  \or \gr@author{1}%
-  \or \gr@author{1}, \gr@author{2}%
-  \else \gr@author{1}, \gr@author{2}, \gr@author{3}%
+\newcommand\lr@author[1]{\csname lr@author@#1\endcsname}
+\newcommand\lr@printauthors{%
+  \ifcase\value{lr@authors}%
+  \or \lr@author{1}%
+  \or \lr@author{1}, \lr@author{2}%
+  \else \lr@author{1}, \lr@author{2}, \lr@author{3}%
   \fi}
 
 % Title-page head (two-column table):
 %   \infoline text, wrapped after             [logo]
-%   \gr@infolinewidth if too long
+%   \lr@infolinewidth if too long
 %   date
 % Without an info line the date moves up.
 
-% Typesets \infoline into \gr@infobox (global: the head is only output at
-% shipout): a ragged-right paragraph of width \gr@infolinewidth, aligned
+% Typesets \infoline into \lr@infobox (global: the head is only output at
+% shipout): a ragged-right paragraph of width \lr@infolinewidth, aligned
 % at its first line, which therefore stays where a single line would be.
 % The struts give every line, the last included, the full 9pt leading, so
-% the date follows at the usual distance. \gr@infoextra = the height the
+% the date follows at the usual distance. \lr@infoextra = the height the
 % head grew by, (lines-1) x 9pt.
-\newsavebox\gr@infobox
-\newdimen\gr@infoextra
-\newcommand\gr@setinfobox{%
-  \global\gr@infoextra\z@
-  \ifx\gr@infoline\@empty\else
+\newsavebox\lr@infobox
+\newdimen\lr@infoextra
+\newcommand\lr@setinfobox{%
+  \global\lr@infoextra\z@
+  \ifx\lr@infoline\@empty\else
     \begingroup
       \opheaderfont
-      \global\setbox\gr@infobox\hbox{\parbox[t]{\gr@infolinewidth}{%
-        \raggedright\strut\gr@infoline\strut}}%
-      \global\gr@infoextra\dimexpr\dp\gr@infobox-\dp\strutbox\relax
+      \global\setbox\lr@infobox\hbox{\parbox[t]{\lr@infolinewidth}{%
+        \raggedright\strut\lr@infoline\strut}}%
+      \global\lr@infoextra\dimexpr\dp\lr@infobox-\dp\strutbox\relax
     \endgroup
   \fi}
 % Top edge at the row's cap height; \smash keeps the row height unchanged.
-\newcommand\gr@logocell{%
-  \ifx\gr@logo\@empty\else
-    \smash{\raisebox{\dimexpr\fontcharht\font`H-\height\relax}{\gr@includelogo}}%
+\newcommand\lr@logocell{%
+  \ifx\lr@logo\@empty\else
+    \smash{\raisebox{\dimexpr\fontcharht\font`H-\height\relax}{\lr@includelogo}}%
   \fi}
-\newcommand\gr@titlehead{%
+\newcommand\lr@titlehead{%
   % & and \\ must not occur inside an open conditional; branches are
   % resolved via \@firstoftwo/\@secondoftwo before the alignment sees them.
-  \ifx\gr@infoline\@empty\expandafter\@secondoftwo\else\expandafter\@firstoftwo\fi
-    {\copy\gr@infobox&\gr@logocell
+  \ifx\lr@infoline\@empty\expandafter\@secondoftwo\else\expandafter\@firstoftwo\fi
+    {\copy\lr@infobox&\lr@logocell
      \ifx\@date\@empty\expandafter\@gobble\else\expandafter\@firstofone\fi
        {\\\@date&}}%
-    {\@date&\gr@logocell}}
+    {\@date&\lr@logocell}}
 
 % article defines \@maketitle only without its `titlepage' option.
 \providecommand\@maketitle{}
@@ -318,25 +318,25 @@
     \vskip7pt
     % A wrapped info line grows down into the text area: move the title
     % block down by the same amount (0pt for a single line).
-    \vskip\gr@infoextra
-    \ifx\gr@doctype\@empty\else
+    \vskip\lr@infoextra
+    \ifx\lr@doctype\@empty\else
       % soul needs the literal text, not a macro.
       \hbox to\textwidth{\Doctypefont
-        \expandafter\letterspacetwty\expandafter{\gr@doctype}\hfill}%
+        \expandafter\letterspacetwty\expandafter{\lr@doctype}\hfill}%
       \vskip15.5pt
     \fi
     {\Titlefont\@title\par}%
-    \ifx\gr@subtitle\@empty\else
+    \ifx\lr@subtitle\@empty\else
       \vskip3pt
-      {\Subtitlefont\gr@subtitle\par}%
+      {\Subtitlefont\lr@subtitle\par}%
     \fi
-    \ifnum\value{gr@authors}>\z@
+    \ifnum\value{lr@authors}>\z@
       \vskip10pt
-      {\Authorfont\gr@printauthors\par}%
+      {\Authorfont\lr@printauthors\par}%
     \fi
-    \ifnum\value{gr@affiliations}>\z@
-      \vskip\ifnum\value{gr@authors}>\z@ 3pt\else 10pt\fi
-      {\addressfont\gr@affiliations\par}%
+    \ifnum\value{lr@affiliations}>\z@
+      \vskip\ifnum\value{lr@authors}>\z@ 3pt\else 10pt\fi
+      {\addressfont\lr@affiliations\par}%
     \fi
   }\par
   % 22pt in total: the following paragraph adds \parskip (6pt) on top.
@@ -351,11 +351,11 @@
   \begingroup
     \newpage
     \if@titlepage\pagenumbering{gobble}\fi
-    \ifx\gr@emblem\@empty\else
-      \AddToHookNext{shipout/background}{\gr@drawemblem}%
+    \ifx\lr@emblem\@empty\else
+      \AddToHookNext{shipout/background}{\lr@drawemblem}%
     \fi
     \global\@topnum\z@ % no floats at the top of the first page
-    \gr@setinfobox
+    \lr@setinfobox
     \@maketitle
     \thispagestyle{titlepage}%
   \endgroup
@@ -388,7 +388,7 @@
   \def\@oddhead{\hbox to\textwidth{%
     \vbox to\z@{\vskip-7pt\rlap{\parbox{\textwidth}{\opheaderfont
       \begin{tabular*}{\textwidth}[b]{@{}l@{\extracolsep{\fill}}r@{}}%
-        \gr@titlehead
+        \lr@titlehead
       \end{tabular*}}}\vss}%
     \hss}}%
   \def\@oddfoot{\if@titlepage\else\headerfont\hfil\thepage\hfil\fi}%
@@ -574,7 +574,7 @@
 }
 
 % \codefile[shown name]{path}{note}
-\newcommand\gr@basename[1]{%
+\newcommand\lr@basename[1]{%
   \filename@parse{#1}\filename@base
   \ifx\filename@ext\relax\else.\filename@ext\fi}
 \newcommand\codefile[3][]{%
@@ -582,7 +582,7 @@
   \needspace{5\baselineskip}%
   \noindent
   {\smallprintfont\ttfamily
-    \if\relax\detokenize{#1}\relax\gr@basename{#2}\else#1\fi}%
+    \if\relax\detokenize{#1}\relax\lr@basename{#2}\else#1\fi}%
   \hfill{\smallprintfont\itshape #3}\par
   \nobreak
   \lstinputlisting{#2}}
@@ -608,7 +608,7 @@
   % A manual \\ in \infoline separates items: ", " in the subject.
   \begingroup
     \pdfstringdefDisableCommands{\def\\{, }}%
-    \hypersetup{pdfsubject = {\gr@infoline}}%
+    \hypersetup{pdfsubject = {\lr@infoline}}%
   \endgroup}
 \RequirePackage[ngerman, nameinlink, noabbrev, capitalise]{cleveref}
 % \Crefformat must be set too; the derived one breaks on #2(#1)#3.
