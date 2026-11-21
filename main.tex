@@ -1,53 +1,55 @@
 % !TeX program = lualatex
-\documentclass[titlepage]{lab-report} % titlepage: title on its own page,
+% Compile with LuaLaTeX (Overleaf: Menu > Compiler > LuaLaTeX).
+% Step-by-step instructions: GUIDE.md in the template repository.
+\documentclass[titlepage]{generalreport} % titlepage: title on its own page,
                                          % numbering starts on page 2
 
 % Anything left out (except \title) is simply not printed.
 
 % ---- Title page head --------------------------------------------------------
 \logo{assets/logos/placeholder-logo}   % top right; e.g. \logo[height=1cm]{…}
-\emblem{assets/logos/lmu-siegel}       % title-page watermark, bottom right; options:
-                                       % [width=…, color=black!8, right=.333, bottom=.333]
-\infoline{\textit{Fortgeschrittenenpraktikum 2}, Versuch ???, Gruppe ??}
+\emblem{assets/logos/placeholder-emblem} % title-page watermark, bottom right;
+                                       % options: [width=…, color=black!8,
+                                       % right=.333, bottom=.333]
+\infoline{\textit{Kurs oder Veranstaltung}, weitere Angaben}
                                        % top left, free text; wraps at half the
                                        % text width, \\ breaks manually
 \date{\today}                          % line below; or e.g. \date{10.10.2026}
 
 % ---- Title block -----------------------------------------------------------
-\documenttype{LABORBERICHT}            % label above the title, as typed
-\title[Kurztitel]{Titel des Versuchs}  % [short title for the running head]
-\subtitle{Untertitel des Versuchs}
-\author[1]{Vorname Nachname}           % one to three authors
-\author[1]{Vorname Nachname}
-\affiliation[1]{Fakultät für Physik, Ludwig-Maximilians-Universität München}
+\documenttype{BERICHT}                 % label above the title, as typed
+\title[Kurztitel]{Titel des Berichts}  % [short title for the running head]
+\subtitle{Untertitel des Berichts}
+\author[1]{Vorname Nachname}           % one to three authors; [n] = number
+\author[1]{Vorname Nachname}           % of the author's affiliation
+\affiliation[1]{Institut, Universität, Stadt} % period is added automatically
 
 \addbibresource{references.bib}
 
-% ---- Beispielinhalt --------------------------------------------------------
-% Liefert den deutschen Blindtext (\blindtext, \Blindtext) in den Kapiteln.
-% Löschen, sobald die Kapitel echten Text enthalten.
+% ---- Example content -------------------------------------------------------
+% Provides the German dummy text (\blindtext, \Blindtext) in the sections.
+% Delete once the sections contain real text.
 \usepackage{blindtext}
 
 \begin{document}
 
 \maketitle
 
-\begin{abstract}
-Kurze Zusammenfassung des Versuchs: Ziel, Methode, wichtigste Ergebnisse.
-\end{abstract}
+\input{sections/abstract}
 
 \tableofcontents
 \clearpage
 
-\input{sections/01-einleitung}
-\input{sections/02-theoretische-grundlagen}
-\input{sections/03-versuchaufbau-durchführung}
-\input{sections/04-auswertung-ergebnisse}
-\input{sections/05-disskussion-fehlerbetrachtung}
-\input{sections/06-zusammenfassung}
+% One file per section; add, remove or reorder the lines as needed.
+\input{sections/einleitung}
+\input{sections/theorie}
+\input{sections/aufbau}
+\input{sections/teilversuch1}
+\input{sections/teilversuch2}
+\input{sections/zusammenfassung}
 \clearpage
-\input{sections/07-anhang}
+\input{sections/anhang}
 \clearpage
-\printbibliography[heading=bibnumbered, title={Literatur}]
+\printbibliography[heading=bibnumbered]
 
 \end{document}

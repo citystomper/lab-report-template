@@ -1,0 +1,7 @@
+# Left out of GitHub's "Download ZIP" (git archive), so the ZIP holds only
+# the files a report needs. "Use this template" still copies everything.
+README.md       export-ignore
+GUIDE.md        export-ignore
+docs/           export-ignore
+.gitattributes  export-ignore
+.gitignore      export-ignore
