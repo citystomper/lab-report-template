@@ -1,6 +1,6 @@
 # Lab Report Template
 
-LaTeX template for lab reports.
+LaTeX template for my university lab reports.
 
 <p>
   <img src="docs/preview-title-page.png" width="49%" alt="Title page">
